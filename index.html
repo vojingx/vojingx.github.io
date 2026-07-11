@@ -68,49 +68,6 @@ cursor:pointer;
 .start-btn:hover{
 background:#e63939;
 }
-/* 聚合搜索模块 */
-.search-box{
-background:#ffe8e8;
-border-radius:12px;
-padding:40px;
-margin-bottom:60px;
-text-align:center;
-display:none;
-}
-.search-box h2{
-color:#991a1a;
-margin-bottom:25px;
-}
-.search-input{
-width:70%;
-height:46px;
-padding:0 16px;
-border:1px solid #ffaaaa;
-border-radius:8px;
-font-size:16px;
-outline:none;
-}
-.search-input:focus{
-border-color:#ff4d4d;
-}
-.search-btn-group{
-margin-top:20px;
-display:flex;
-gap:16px;
-justify-content:center;
-flex-wrap:wrap;
-}
-.search-btn{
-padding:10px 24px;
-border:none;
-border-radius:7px;
-font-size:16px;
-cursor:pointer;
-color:#fff;
-}
-.baidu{background:#de4739;}
-.bing{background:#008373;}
-.so{background:#00a4ff;}
 /* 资源下载区 */
 .down-area{
 background:#ffe8e8;
@@ -199,9 +156,6 @@ gap:16px;
 flex-wrap:wrap;
 justify-content:center;
 }
-.search-input{
-width:100%;
-}
 .down-card{
 width:100%;
 }
@@ -213,11 +167,10 @@ width:100%;
 <div class="logo">Vojing工作室</div>
 <div class="nav-group">
 <a class="nav-link" onclick="showWelcome()">首页</a>
-<a class="nav-link" onclick="toggleSearch()">聚合搜索</a>
+<a class="nav-link" onclick="location.href='/VOJING/'">VOJING搜索</a>
 <a class="nav-link" onclick="toggleDownload()">资源下载</a>
 <a class="nav-link" onclick="location.href='/CodeLab/'">网页实验室</a>
 <a class="nav-link" onclick="toggleAbout()">关于</a>
-<a class="nav-link" onclick="location.href='/VOJING/'">VOJING搜索</a>
 </div>
 </div>
 
@@ -226,17 +179,6 @@ width:100%;
 <div class="welcome-box" id="welcomeBox">
 <h2>欢迎来到 Vojing 工作室</h2>
 <button class="start-btn" onclick="goDownload()">点击开始</button>
-</div>
-
-<!-- 聚合搜索 -->
-<div class="search-box" id="searchBox">
-<h2>自研聚合搜索（百度 / 必应 / 360）</h2>
-<input class="search-input" id="searchInput" placeholder="输入你要搜索的内容">
-<div class="search-btn-group">
-<button class="search-btn baidu" onclick="search('baidu')">百度搜索</button>
-<button class="search-btn bing" onclick="search('bing')">必应搜索</button>
-<button class="search-btn so" onclick="search('so')">360搜索</button>
-</div>
 </div>
 
 <!-- 资源下载 -->
@@ -272,7 +214,6 @@ width:100%;
 // 隐藏全部板块
 function hideAll(){
     document.getElementById("welcomeBox").style.display = "none";
-    document.getElementById("searchBox").style.display = "none";
     document.getElementById("downloadBox").style.display = "none";
     document.getElementById("aboutBox").style.display = "none";
 }
@@ -286,11 +227,6 @@ function goDownload(){
     hideAll();
     document.getElementById("downloadBox").style.display = "block";
 }
-// 搜索页面
-function toggleSearch(){
-    hideAll();
-    document.getElementById("searchBox").style.display = "block";
-}
 // 下载页面
 function toggleDownload(){
     hideAll();
@@ -300,27 +236,6 @@ function toggleDownload(){
 function toggleAbout(){
     hideAll();
     document.getElementById("aboutBox").style.display = "block";
-}
-// 搜索跳转
-function search(type){
-    let word = document.getElementById("searchInput").value.trim();
-    if(word === ""){
-        alert("请输入搜索关键词！");
-        return;
-    }
-    let url = "";
-    switch(type){
-        case "baidu":
-            url = "https://www.baidu.com/s?wd=" + encodeURIComponent(word);
-            break;
-        case "bing":
-            url = "https://cn.bing.com/search?q=" + encodeURIComponent(word);
-            break;
-        case "so":
-            url = "https://www.so.com/s?q=" + encodeURIComponent(word);
-            break;
-    }
-    window.open(url);
 }
 </script>
 </body>
