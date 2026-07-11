@@ -52,9 +52,28 @@
         .search-btn2:hover{
             background:#09c;
         }
+        /* 左上角绿色返回首页按钮 */
+        .back-btn{
+            position: fixed;
+            top:12px;
+            left:12px;
+            background:#0f0;
+            color:#000;
+            border:none;
+            padding:6px 14px;
+            font-size:14px;
+            border-radius:4px;
+            cursor:pointer;
+            z-index:50;
+        }
+        .back-btn:hover{
+            background:#0c0;
+        }
     </style>
 </head>
 <body>
+<!-- 左上角返回首页按钮 -->
+<button class="back-btn" id="backBtn">← 返回首页</button>
 <!-- 右上角另存为按钮 -->
 <button class="save-btn" id="saveBtn">另存为</button>
 <button class="search-btn2" id="searchJump">聚合搜索</button>
@@ -172,6 +191,11 @@ saveBtn.addEventListener("click", ()=>{
 // 聚合搜索：跳转到 VOJING 文件夹
 document.getElementById("searchJump").addEventListener("click", ()=>{
     location.href = '/VOJING/';
+})
+
+// 返回首页：回到工作室主页
+document.getElementById("backBtn").addEventListener("click", ()=>{
+    location.href = '/';
 })
 
 loadPy();
