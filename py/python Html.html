@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>网页Python终端</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#111;padding:15px;font-family:Consolas}
+#term{width:100%;height:92vh;background:#000;color:#0f0;padding:10px;overflow:auto;font-size:15px}
+.row{display:flex;margin-top:5px}
+.prompt{margin-right:8px}
+#inp{flex:1;background:transparent;border:0;outline:none;color:#0f0;font-size:15px}
+</style>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+</head>
+<body>
+<div id="term">
+<div>正在加载Python运行环境...</div>
+<div class="row"><span class="prompt">></span><input id="inp" autofocus></div>
+</div>
+
+<script>
+const term = document.getElementById('term');
+let py;
+// 页面输出打印
+function log(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  term.appendChild(d);
+  term.scrollTop = term.scrollHeight;
+}
+// 新建输入行
+function newLine(){
+  const r = document.createElement('div');
+  r.className = "row";
+  r.innerHTML = `<span class="prompt">></span><input id="inp" autofocus>`;
+  term.appendChild(r);
+  const i = r.querySelector('#inp');
+  i.onkeydown = run;
+  i.focus();
+}
+// 运行代码，替换print捕获方案
+async function run(e){
+  if(e.key !== 'Enter') return;
+  const code = e.target.value.trim();
+  log(`> ${code}`);
+  try{
+    // 包裹代码，拦截print输出，不修改全局stdout
+    const wrapCode = `
+import sys
+output = []
+def custom_print(*args):
+    output.append(' '.join(str(i) for i in args))
+sys.stdout.write = lambda s: output.append(s.strip())
+print = custom_print
+${code}
+# 返回收集到的输出
+"\n".join(output)
+`;
+    const ret = await py.runPythonAsync(wrapCode);
+    if(ret) log(ret);
+  }catch(err){
+    log(`报错: ${err}`);
+  }
+  e.target.remove();
+  newLine();
+}
+// 初始化Python，不再绑定stdout
+async function init(){
+  py = await loadPyodide();
+  term.innerHTML = "";
+  log("Python环境就绪，输入代码运行，例：print(12345)");
+  newLine();
+}
+init();
+document.getElementById('inp').onkeydown = run;
+</script>
+</body>
+</html>
