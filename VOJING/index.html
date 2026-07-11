@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VOJING Search</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+    background: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 15px;
+    position: relative;
+}
+.setting-dot{
+    position: fixed;
+    top:20px;
+    right:20px;
+    width:32px;
+    height:32px;
+    border:2px solid #e6212a;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+    color:#e6212a;
+    cursor:pointer;
+    user-select:none;
+    z-index:100;
+}
+.engine-panel{
+    position:fixed;top:60px;right:20px;background:#fff;
+    border:2px solid #e6212a;border-radius:10px;padding:12px;
+    display:none;z-index:99;min-width:140px;
+}
+.engine-item{
+    padding:8px 10px;cursor:pointer;border-radius:6px;margin:4px 0;
+}
+.engine-item:hover{background:#f2f2f2}
+.engine-item.active{background:#ffe8e8;color:#e6212a;font-weight:bold}
+.logo-group{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 35px;
+}
+.circle-v{
+    width: 70px;height:70px;
+    border:5px solid #e6212a;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:34px;font-weight:bold;color:#e6212a;flex-shrink:0;
+}
+.vojing-text{font-size:32px;font-weight:bold;letter-spacing:3px;color:#111}
+.wrap{width:100%;max-width:600px;text-align:center}
+.search-container{
+    display:flex;border:2px solid #e6212a;border-radius:999px;overflow:hidden;
+}
+.search-container input{
+    flex:1;border:none;outline:none;padding:14px 18px;font-size:16px;
+}
+.search-container button{
+    border:none;background:#e6212a;color:#fff;padding:0 24px;font-size:16px;cursor:pointer;
+}
+.search-container button:hover{background:#c81922}
+@media screen and (max-width:480px){
+    .circle-v{width:56px;height:56px;font-size:26px;border-width:4px}
+    .vojing-text{font-size:24px;letter-spacing:2px}
+    .search-container input{padding:12px 14px;font-size:15px}
+    .search-container button{padding:0 16px;font-size:15px}
+    .setting-dot{
+        top:12px;
+        right:12px;
+        width:28px;
+        height:28px;
+        font-size:14px;
+    }
+    .engine-panel{top:52px;right:12px}
+}
+</style>
+</head>
+<body>
+<div class="setting-dot" id="dotBtn">⋮</div>
+<div class="engine-panel" id="panel">
+    <div class="engine-item active" data-url="https://cn.bing.com/search?q=">必应</div>
+    <div class="engine-item" data-url="https://www.baidu.com/s?wd=">百度</div>
+    <div class="engine-item" data-url="https://www.so.com/s?q=">360搜索</div>
+    <div class="engine-item" data-url="https://search.mozilla.org/firefox?q=">火狐搜索</div>
+    <div class="engine-item" data-url="https://quark.sm.cn/s?q=">夸克搜索</div>
+</div>
+
+<div class="logo-group">
+    <div class="circle-v">V</div>
+    <div class="vojing-text">VOJING</div>
+</div>
+
+<div class="wrap">
+    <form id="searchForm" target="_blank">
+        <input type="hidden" id="baseUrl" value="https://cn.bing.com/search?q=">
+        <div class="search-container">
+            <input type="text" name="q" placeholder="输入搜索内容" required>
+            <button type="submit">搜索</button>
+        </div>
+    </form>
+</div>
+
+<script>
+const dotBtn = document.getElementById('dotBtn');
+const panel = document.getElementById('panel');
+const baseUrlInput = document.getElementById('baseUrl');
+const items = document.querySelectorAll('.engine-item');
+const form = document.getElementById('searchForm');
+
+dotBtn.onclick = (e)=>{
+    e.stopPropagation();
+    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+}
+document.body.onclick = ()=> panel.style.display = 'none';
+
+items.forEach(item=>{
+    item.onclick = ()=>{
+        items.forEach(i=>i.classList.remove('active'));
+        item.classList.add('active');
+        baseUrlInput.value = item.dataset.url;
+        panel.style.display = 'none';
+    }
+})
+
+form.onsubmit = function(){
+    const kw = this.q.value.trim();
+    window.open(baseUrlInput.value + encodeURIComponent(kw));
+    return false;
+}
+</script>
+</body>
+</html>
