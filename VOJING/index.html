@@ -17,6 +17,22 @@ body{
     padding: 20px 15px;
     position: relative;
 }
+.home-btn{
+    position:fixed;
+    top:20px;
+    left:20px;
+    background:#fff;
+    border:2px solid #e6212a;
+    color:#e6212a;
+    border-radius:999px;
+    padding:6px 16px;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+    user-select:none;
+    z-index:100;
+}
+.home-btn:hover{background:#ffe8e8}
 .setting-dot{
     position: fixed;
     top:20px;
@@ -82,10 +98,12 @@ body{
         font-size:14px;
     }
     .engine-panel{top:52px;right:12px}
+    .home-btn{top:12px;left:12px;font-size:13px;padding:5px 12px}
 }
 </style>
 </head>
 <body>
+<div class="home-btn" id="homeBtn">← 返回首页</div>
 <div class="setting-dot" id="dotBtn">⋮</div>
 <div class="engine-panel" id="panel">
     <div class="engine-item active" data-url="https://cn.bing.com/search?q=">必应</div>
@@ -116,6 +134,9 @@ const panel = document.getElementById('panel');
 const baseUrlInput = document.getElementById('baseUrl');
 const items = document.querySelectorAll('.engine-item');
 const form = document.getElementById('searchForm');
+const homeBtn = document.getElementById('homeBtn');
+
+homeBtn.onclick = ()=> location.href = '/';
 
 dotBtn.onclick = (e)=>{
     e.stopPropagation();
