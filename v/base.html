@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Vojing Cloud{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo">Vojing Cloud</div>
+    <div class="nav-group">
+        {% if current_user.is_authenticated %}
+        <span class="nav-user">{{ current_user.username }}</span>
+        <a class="nav-link" href="{{ url_for('dashboard') }}">网盘</a>
+        <a class="nav-link" href="{{ url_for('logout') }}">登出</a>
+        {% else %}
+        <a class="nav-link" href="{{ url_for('login') }}">登录</a>
+        <a class="nav-link" href="{{ url_for('register') }}">注册</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="main">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-box">
+        {% for msg in messages %}
+        <div class="flash-msg">{{ msg }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

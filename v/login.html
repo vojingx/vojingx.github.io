@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}登录 - Vojing Cloud{% endblock %}
+{% block content %}
+<div class="auth-box">
+    <h2>登录 Vojing Cloud</h2>
+    <form method="post" action="{{ url_for('login') }}">
+        <div class="form-row">
+            <label>用户名</label>
+            <input type="text" name="username" required autocomplete="username">
+        </div>
+        <div class="form-row">
+            <label>密码</label>
+            <input type="password" name="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="primary-btn">登录</button>
+    </form>
+    <p class="auth-tip">还没有账号？<a href="{{ url_for('register') }}">立即注册</a></p>
+</div>
+{% endblock %}

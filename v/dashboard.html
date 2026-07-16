@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}我的网盘 - Vojing Cloud{% endblock %}
+{% block content %}
+<div class="cloud-layout">
+    <!-- 上传区 -->
+    <div class="upload-area" id="dropZone">
+        <h3>上传文件或文件夹</h3>
+        <div class="upload-btns">
+            <label class="primary-btn file-btn">
+                选择文件
+                <input type="file" id="fileInput" multiple hidden>
+            </label>
+            <label class="primary-btn file-btn">
+                选择文件夹
+                <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+            </label>
+        </div>
+        <p class="upload-tip">也支持把文件/文件夹拖拽到这里上传</p>
+        <div class="progress-wrap" id="progressWrap" style="display:none;">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span id="progressText">0%</span>
+        </div>
+        <div class="upload-status" id="uploadStatus"></div>
+    </div>
+
+    <div class="cloud-columns">
+        <!-- 文件列表 -->
+        <div class="file-panel">
+            <h3>我的文件</h3>
+            {% if files %}
+            <table class="file-table">
+                <thead>
+                    <tr>
+                        <th>文件名</th>
+                        <th>大小</th>
+                        <th>上传时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in files %}
+                    <tr>
+                        <td class="file-name" title="{{ f.filename }}">{{ f.filename }}</td>
+                        <td>{{ format_size(f.size) }}</td>
+                        <td>{{ f.uploaded_at[:19].replace('T',' ') }}</td>
+                        <td class="file-actions">
+                            <a class="icon-btn download" href="{{ url_for('download', file_id=f.id) }}" title="下载">⬇</a>
+                            <button class="icon-btn delete" onclick="deleteFile({{ f.id }})" title="删除">🗑</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-tip">还没有文件，快去上传吧~</p>
+            {% endif %}
+        </div>
+
+        <!-- 操作记录 -->
+        <div class="log-panel">
+            <h3>操作记录</h3>
+            {% if logs %}
+            <ul class="log-list">
+                {% for log in logs %}
+                <li>
+                    <span class="log-action">{{ {'upload':'上传','download':'下载','delete':'删除'}[log.action] }}</span>
+                    <span class="log-name" title="{{ log.filename }}">{{ log.filename }}</span>
+                    <span class="log-time">{{ log.timestamp[:19].replace('T',' ') }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="empty-tip">暂无操作记录</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const folderInput = document.getElementById('folderInput');
+const progressWrap = document.getElementById('progressWrap');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const uploadStatus = document.getElementById('uploadStatus');
+
+function uploadFiles(files){
+    if(!files.length) return;
+    const form = new FormData();
+    for(const f of files) form.append('files', f);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '{{ url_for("upload") }}');
+    xhr.upload.onprogress = e => {
+        if(e.lengthComputable){
+            const p = Math.round(e.loaded / e.total * 100);
+            progressFill.style.width = p + '%';
+            progressText.textContent = p + '%';
+        }
+    };
+    xhr.onload = () => {
+        progressWrap.style.display = 'none';
+        let msg = '上传完成';
+        try{
+            const r = JSON.parse(xhr.responseText);
+            msg = r.message || msg;
+        }catch(_){}
+        uploadStatus.textContent = msg;
+        setTimeout(() => location.reload(), 800);
+    };
+    xhr.onerror = () => {
+        progressWrap.style.display = 'none';
+        uploadStatus.textContent = '上传失败，请重试';
+    };
+    progressWrap.style.display = 'flex';
+    progressFill.style.width = '0%';
+    progressText.textContent = '0%';
+    uploadStatus.textContent = '';
+    xhr.send(form);
+}
+
+fileInput.addEventListener('change', e => uploadFiles(e.target.files));
+folderInput.addEventListener('change', e => uploadFiles(e.target.files));
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    uploadFiles(e.dataTransfer.files);
+});
+
+function deleteFile(id){
+    if(!confirm('确定删除这个文件吗？')) return;
+    fetch('{{ url_for("delete", file_id=0) }}'.replace('0', id), {method:'POST'})
+        .then(r => r.json())
+        .then(() => location.reload())
+        .catch(() => alert('删除失败'));
+}
+</script>
+{% endblock %}
