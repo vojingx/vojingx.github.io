@@ -21,6 +21,10 @@
   .btn-site{background:#eef2ff;color:#2a5298;border:1px solid #d6e0ff;}
   .shared-by{font-size:14px;color:#666;background:#f5f7ff;padding:10px 14px;border-radius:10px;display:inline-block;}
   .shared-by b{color:#1e3c72;}
+  .share-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .btn-all{display:inline-block;background:linear-gradient(135deg,#36d1dc,#5b86e5);color:#fff;border:none;padding:9px 16px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(91,134,229,.35);}
+  .btn-all:active{transform:scale(.97);}
+  .btn-all:disabled{opacity:.6;cursor:default;}
   .file-info{margin-top:20px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
   .fi-icon{font-size:60px;}
   .fi-name{font-size:20px;font-weight:700;word-break:break-all;}
@@ -49,7 +53,10 @@
   </div>
   <!-- 右：分享者 + 文件信息 -->
   <div class="box box-right">
-    <div class="shared-by" id="sharedBy">由 <b>未知用户</b> 分享</div>
+    <div class="share-head">
+      <div class="shared-by" id="sharedBy">由 <b>未知用户</b> 分享</div>
+      <button class="btn-all" id="dlAllBtn" style="display:none" onclick="downloadAll()">⬇ 下载全部</button>
+    </div>
     <div class="file-info" id="fileInfo"><p>加载中…</p></div>
   </div>
 </div>
@@ -66,6 +73,7 @@ document.getElementById('siteBtn').href=SITE_URL;
 const params=new URLSearchParams(location.search);
 const file=params.get('file');
 const folder=params.get('folder');
+let currentFolderFiles=[];
 
 function encPath(p){return p.split('/').map(encodeURIComponent).join('/');}
 function sharerOf(path){const m=String(path).match(/^Cloud\/([^\/]+)/);return m?m[1]:'未知用户';}
@@ -81,11 +89,15 @@ async function init(){
     document.getElementById('shopName').textContent=up;
     document.getElementById('sharedBy').innerHTML='由 <b>'+esc(up)+'</b> 分享';
     const name=folder.split('/').pop();
-    info.innerHTML=`<div class="fi-icon">📁</div><div class="fi-name">${esc(name)}</div><div class="fi-meta">文件夹（以下文件可直接下载，无需登录）</div>`;
-    // 文件夹无法单个下载：左按钮改为“查看文件”滚动到列表
-    dl.textContent='📂 查看文件';
+    info.innerHTML=`<div class="fi-icon">📁</div><div class="fi-name">${esc(name)}</div><div class="fi-meta">文件夹（可点「下载全部」一键下载，或「进入网盘」登录后浏览）</div>`;
+    // 文件夹无法单个下载：左按钮改为“进入网盘”（需登录查看）
+    dl.textContent='📂 进入网盘';
     dl.removeAttribute('download');
-    dl.onclick=()=>document.getElementById('fileList').scrollIntoView({behavior:'smooth'});
+    dl.href='https://vojingx.github.io/Cloud/';
+    dl.target='_blank';
+    dl.onclick=null;
+    // 显示“下载全部”按钮（无需登录）
+    document.getElementById('dlAllBtn').style.display='inline-block';
     await listFolder(folder,info);
   }else if(file){
     const up=sharerOf(file);
@@ -113,6 +125,7 @@ async function listFolder(path,info){
     const d=await r.json();
     const arr=Array.isArray(d)?d:[d];
     const files=arr.filter(f=>f.type==='file'&&!f.name.startsWith('_'));
+    currentFolderFiles=files;
     if(files.length===0){info.innerHTML+='<p class="fi-meta" style="margin-top:10px">（空文件夹）</p>';return;}
     let html='<div class="file-list" id="fileList">';
     files.forEach(f=>{
@@ -123,6 +136,29 @@ async function listFolder(path,info){
   }catch(e){
     info.innerHTML+='<p class="err" style="margin-top:10px">文件夹列表加载失败，请稍后重试。</p>';
   }
+}
+// ======== 下载全部（文件夹分享，无需登录）========
+async function downloadAll(){
+  if(!currentFolderFiles.length)return;
+  const btn=document.getElementById('dlAllBtn');
+  btn.disabled=true; btn.textContent='下载中…';
+  for(const f of currentFolderFiles){
+    await downloadBlob(f);
+    await new Promise(r=>setTimeout(r,500)); // 间隔，避免浏览器拦截
+  }
+  btn.disabled=false; btn.textContent='⬇ 下载全部';
+}
+async function downloadBlob(f){
+  try{
+    const r=await fetch(rawUrl(f.path));
+    if(!r.ok)return;
+    const b=await r.blob();
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(b);
+    a.download=f.name;
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  }catch(e){}
 }
 init();
 </script>
