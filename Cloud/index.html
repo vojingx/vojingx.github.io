@@ -297,6 +297,7 @@ gap:16px;
 <p>文件存储 · 快速下载 · 一键分享</p>
 <div class="search-bar">
 <input type="text" id="searchInput" placeholder="输入文件名搜索..." oninput="filterFiles()">
+<button class="btn btn-primary" onclick="showUploadGuide()">📤 上传文件</button>
 </div>
 </div>
 
@@ -327,6 +328,27 @@ gap:16px;
 </div>
 </div>
 
+</div>
+
+<!-- 上传引导弹窗 -->
+<div id="uploadModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;justify-content:center;align-items:center;">
+<div style="background:#fff;border-radius:12px;padding:40px;max-width:500px;width:90%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.2);">
+<div style="font-size:48px;margin-bottom:16px;">📤</div>
+<h3 style="color:#991a1a;margin-bottom:12px;font-size:20px;">上传文件到网盘</h3>
+<p style="color:#662222;font-size:14px;line-height:1.8;margin-bottom:20px;">
+文件上传到 GitHub 仓库的 <code style="background:#ffe8e8;padding:2px 8px;border-radius:4px;">Cloud/</code> 目录后，
+会自动显示在网盘列表中。
+</p>
+<div style="text-align:left;background:#ffe8e8;border-radius:8px;padding:16px;margin-bottom:20px;font-size:13px;color:#662222;line-height:1.8;">
+<b style="color:#991a1a;">上传方式：</b><br>
+1. 打开 GitHub 仓库 <a href="https://github.com/vojingx/vojingx.github.io" target="_blank" style="color:#ff5252;">vojingx/vojingx.github.io</a><br>
+2. 进入 <b>Cloud</b> 文件夹<br>
+3. 点击 "Add file" → "Upload files"<br>
+4. 拖入文件，提交即可
+</div>
+<button class="btn btn-primary" onclick="document.getElementById('uploadModal').style.display='none'">知道了</button>
+<button class="btn btn-secondary" style="margin-left:10px;" onclick="window.open('https://github.com/vojingx/vojingx.github.io/tree/main/Cloud','_blank')">🚀 直接去上传</button>
+</div>
 </div>
 
 <script>
@@ -430,7 +452,7 @@ function createFileCard(file) {
         </div>
         <div class="file-actions">
             <a class="down-btn" href="${rawUrl}" target="_blank" download>⬇ 下载</a>
-            <button class="share-btn" onclick="copyShareLink('${escapeJs(shareUrl)}', '${escapeJs(file.name)}')">🔗 分享</button>
+            <button class="share-btn" onclick="copyShareLink('${escapeJs(shareUrl)}', '${escapeJs(file.name)}')">🔗 复制永久链接</button>
         </div>
     </div>`;
 }
@@ -450,16 +472,15 @@ function showEmpty(msg) {
 function copyShareLink(url, name) {
     // 使用 Clipboard API
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => showToast('✅ 分享链接已复制！'));
+        navigator.clipboard.writeText(url).then(() => showToast('✅ 永久分享链接已复制！'));
     } else {
-        // 降级方案
         const input = document.createElement('input');
         input.value = url;
         document.body.appendChild(input);
         input.select();
         document.execCommand('copy');
         document.body.removeChild(input);
-        showToast('✅ 分享链接已复制！');
+        showToast('✅ 永久分享链接已复制！');
     }
 }
 
@@ -535,6 +556,18 @@ function escapeHtml(str) {
 function escapeJs(str) {
     return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
 }
+
+function showUploadGuide() {
+document.getElementById('uploadModal').style.display = 'flex';
+}
+
+// 点击弹窗背景关闭
+document.addEventListener('DOMContentLoaded', function() {
+var modal = document.getElementById('uploadModal');
+modal.addEventListener('click', function(e) {
+if (e.target === modal) modal.style.display = 'none';
+});
+});
 
 function showToast(msg, isError = false) {
     const toast = document.getElementById('toast');
