@@ -230,6 +230,11 @@ function showDrive(){
     document.getElementById('navUser').innerHTML=`👤 ${currentUser.username} <button class="nav-logout" onclick="doLogout()">退出</button>`;
     document.getElementById('welcomeMsg').textContent=`欢迎，${currentUser.username}`;
     loadAllFiles();
+    // 支持文件夹深链：?folder=<路径> 打开后自动进入该文件夹
+    try{
+        const fp=new URLSearchParams(location.search).get('folder');
+        if(fp){openFolder(decodeURIComponent(fp));}
+    }catch(e){}
 }
 function toggleAuthMode(){
     if(authMode==='login'){
@@ -518,12 +523,14 @@ function renderFiles(files){
 }
 function createCard(f){
     if(f.type==='dir'){
+        const flink=folderLink(f.path);
         return `
         <div class="file-card folder-card" onclick="openFolder('${escJs(f.path)}')">
             <div class="file-icon">📁</div>
             <h4>${esc(f.name)}</h4>
             <div class="file-meta">文件夹</div>
             <div class="file-actions">
+                <button class="share-btn" onclick="event.stopPropagation();copyLink('${escJs(flink)}')">🔗 复制链接</button>
                 <button class="del-btn" onclick="event.stopPropagation();deleteFolder('${escJs(f.path)}','${escJs(f.name)}')">🗑</button>
             </div>
         </div>`;
@@ -548,6 +555,8 @@ function copyLink(url){
     if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('永久分享链接已复制！'));}
     else{const i=document.createElement('input');i.value=url;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);showToast('永久分享链接已复制！');}
 }
+// 文件夹深链：打开后自动进入该文件夹
+function folderLink(path){return `https://vojingx.github.io/Cloud/?folder=${encodeURIComponent(path)}`;}
 function filterFiles(){
     const q=document.getElementById('searchInput').value.toLowerCase();
     renderFiles(q?allFiles.filter(f=>f.name.toLowerCase().includes(q)):allFiles);
