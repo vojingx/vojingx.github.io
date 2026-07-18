@@ -94,6 +94,14 @@ padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
 .file-card{width:100%;}
 .auth-box{padding:30px 20px;}
 }
+.path-bar{padding:8px 12px;margin-bottom:12px;background:#fff;border-radius:8px;font-size:14px;color:#555;display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
+.crumb{color:#5b9dff;cursor:pointer;}
+.crumb:hover{text-decoration:underline;}
+.crumb.up{color:#888;font-weight:600;}
+.crumb-sep{color:#bbb;}
+.upload-btns{display:flex;gap:10px;justify-content:center;margin:8px 0;}
+.folder-card{cursor:pointer;border:1px solid #ffe0b2;background:#fffaf2;}
+.folder-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);}
 </style>
 </head>
 <body>
@@ -138,12 +146,17 @@ padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
 </div>
 
 <!-- 上传区 -->
-<div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+<div class="upload-area" id="uploadArea">
 <div class="upload-icon">📤</div>
-<p>点击此处上传文件 或 拖拽文件到此处</p>
-<p class="upload-hint">支持所有文件格式，单个文件最大 100MB（GitHub API 上限）</p>
+<p>拖拽文件到此处，或选择下方方式上传</p>
+<div class="upload-btns">
+  <button class="btn btn-primary btn-small" type="button" onclick="document.getElementById('fileInput').click()">📄 上传文件</button>
+  <button class="btn btn-secondary btn-small" type="button" onclick="document.getElementById('folderInput').click()">📁 上传文件夹</button>
+</div>
+<p class="upload-hint">单个文件最大 100MB（GitHub API 上限）· 上传文件夹会保留层级结构</p>
 </div>
 <input type="file" id="fileInput" multiple style="display:none" onchange="handleUpload(this.files)">
+<input type="file" id="folderInput" webkitdirectory multiple style="display:none" onchange="handleFolderUpload(this.files)">
 
 <!-- 工具栏 -->
 <div class="toolbar">
@@ -158,6 +171,7 @@ padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
 <!-- 文件列表 -->
 <div class="file-area">
 <h3>📂 我的文件</h3>
+<div class="path-bar" id="pathBar"></div>
 <div class="file-list" id="fileList"><div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div></div>
 </div>
 
@@ -177,7 +191,7 @@ const TOKEN='ghp_k4Do2LDuF'+'4JDItxItWN0kbc'+'StVS36M30MdgN';
 // 用户数据 API
 const API_BASE=`https://api.github.com/repos/${OWNER}/${REPO}`;
 
-let currentUser=null,allFiles=[],currentSort='name',authMode='login';
+let currentUser=null,allFiles=[],currentSort='name',authMode='login',currentPath=null;
 
 // 统一请求头（带 token）
 function authHeaders(){const h={Accept:'application/vnd.github+json'};if(TOKEN)h.Authorization='Bearer '+TOKEN;return h;}
@@ -320,14 +334,47 @@ function doLogout(){
     showAuth();
 }
 // ======== 文件操作 ========
+function getCurrentDir(){return currentPath||getUserDir();}
+function currentRelDir(){
+    const base=getUserDir();
+    if(!currentPath||currentPath===base)return '';
+    return currentPath.slice(base.length+1);
+}
+function joinRel(dir,file){return dir?dir+'/'+file:file;}
 async function loadAllFiles(){
     showLoading();
     try{
-        allFiles=await fetchFiles(getUserDir());
+        allFiles=await fetchFiles(getCurrentDir());
         sortAndRender();
+        renderBreadcrumb();
     }catch(e){
         document.getElementById('fileList').innerHTML='<div class="empty-state" style="width:100%"><div class="empty-icon">📭</div><p>加载失败，请刷新页面</p></div>';
     }
+}
+function openFolder(path){currentPath=path;loadAllFiles();}
+function openRoot(){currentPath=null;loadAllFiles();}
+function goUp(){
+    const base=getUserDir();
+    if(!currentPath||currentPath===base){currentPath=null;return;}
+    const parts=currentPath.split('/');parts.pop();
+    const parent=parts.join('/');
+    currentPath=(parent===base)?null:parent;
+    loadAllFiles();
+}
+function renderBreadcrumb(){
+    const bar=document.getElementById('pathBar');
+    if(!bar)return;
+    let html=`<span class="crumb" onclick="openRoot()">📁 我的文件</span>`;
+    if(currentPath&&currentPath!==getUserDir()){
+        const segs=currentRelDir().split('/');
+        let cum=getUserDir();
+        segs.forEach(s=>{
+            cum=cum+'/'+s;
+            html+=` <span class="crumb-sep">/</span> <span class="crumb" onclick="openFolder('${escJs(cum)}')">${esc(s)}</span>`;
+        });
+        html=`<span class="crumb up" onclick="goUp()">⬆ 返回上级</span> &nbsp; `+html;
+    }
+    bar.innerHTML=html;
 }
 async function fetchFiles(dir){
     const url=`${API_BASE}/contents/${encPath(dir)}?ref=${BRANCH}`;
@@ -336,49 +383,65 @@ async function fetchFiles(dir){
     if(r.status===403)throw new Error('GitHub API 限流，请稍后重试');
     if(!r.ok)return[];
     const d=await r.json();
-    return (Array.isArray(d)?d:[d]).filter(f=>f.type==='file'&&!f.name.startsWith('_')).map(f=>({
-        name:f.name,size:f.size||0,path:f.path,sha:f.sha,
-        raw_url:`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encPath(dir)}/${encodeURIComponent(f.name)}`,
+    const arr=Array.isArray(d)?d:[d];
+    return arr.filter(f=>!f.name.startsWith('_')).map(f=>({
+        name:f.name,size:f.size||0,path:f.path,sha:f.sha,type:f.type,
+        raw_url: f.type==='file' ? `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encPath(dir)}/${encodeURIComponent(f.name)}` : '',
     }));
 }
 async function handleUpload(files){
     if(!files||files.length===0)return;
+    const rel=currentRelDir();
     for(const f of files){
-        if(f.size>100*1024*1024){showToast(`${f.name} 超过100MB限制(GitHub API上限)`,true);continue;}
-        await uploadFile(f);
+        if(f.size>100*1024*1024){showToast(`${f.name} 超过100MB限制`,true);continue;}
+        await uploadOne(f, joinRel(rel,f.name));
     }
     document.getElementById('fileInput').value='';
     await loadAllFiles();
 }
-async function uploadFile(file){
-    showToast(`正在上传: ${file.name}...`);
-    const reader=new FileReader();
-    const content=await new Promise((resolve,reject)=>{
+async function handleFolderUpload(fileList){
+    if(!fileList||fileList.length===0)return;
+    for(const f of fileList){
+        if(!f.webkitRelativePath)continue;
+        if(f.size>100*1024*1024){showToast(`${f.webkitRelativePath} 超过100MB限制`,true);continue;}
+        await uploadOne(f, f.webkitRelativePath);
+    }
+    document.getElementById('folderInput').value='';
+    await loadAllFiles();
+}
+function readAsBase64(file){
+    return new Promise((resolve,reject)=>{
+        const reader=new FileReader();
         reader.onload=()=>resolve(reader.result.split(',')[1]);
         reader.onerror=reject;
         reader.readAsDataURL(file);
     });
-    const safeName=file.name.replace(/[\/\\]/g,'_').slice(0,120);
-    const path=`${getUserDir()}/${safeName}`;
-    const url=`${API_BASE}/contents/${encPath(path)}`;
-    // 检查是否已存在同名文件（防静默覆盖）
+}
+async function uploadOne(file, relPath){
+    showToast(`正在上传: ${relPath}...`);
+    const content=await readAsBase64(file);
+    // 逐段清理非法字符（防路径穿越 / 子目录注入）
+    const segs=String(relPath).split('/').map(s=>s.replace(/[\/\\]/g,'_').slice(0,120));
+    let targetRel=segs.join('/');
+    let path=`${getUserDir()}/${targetRel}`;
     let sha=null;
     try{
-        const r=await fetch(url,{headers:authHeaders()});
+        const r=await fetch(`${API_BASE}/contents/${encPath(path)}`,{headers:authHeaders()});
         if(r.ok){const d=await r.json();sha=d.sha;}
     }catch(e){}
     if(sha){
-        const ok=confirm(`文件 "${file.name}" 已存在，是否覆盖？\n\n取消则自动另存为副本。`);
+        const ok=confirm(`文件 "${targetRel}" 已存在，是否覆盖？\n\n取消则自动另存为副本。`);
         if(!ok){
-            const newName=renameToCopy(file.name);
-            showToast(`已自动重命名为: ${newName}`);
-            return uploadFile({...file,name:newName});
+            segs[segs.length-1]=renameToCopy(segs[segs.length-1]);
+            targetRel=segs.join('/');
+            path=`${getUserDir()}/${targetRel}`;
+            sha=null;
         }
     }
-    const body={message:`Upload: ${file.name}`,content,branch:BRANCH};
+    const body={message:`Upload: ${targetRel}`,content,branch:BRANCH};
     if(sha)body.sha=sha;
-    const r=await fetch(url,{method:'PUT',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(r.ok){showToast(`上传成功: ${file.name}`);}
+    const r=await fetch(`${API_BASE}/contents/${encPath(path)}`,{method:'PUT',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(r.ok)showToast(`上传成功: ${targetRel}`);
     else{const e=await r.json();showToast(`上传失败: ${e.message||'未知错误'}`,true);}
 }
 // 生成不冲突的副本名：name(1).ext / name(2).ext ...
@@ -396,6 +459,28 @@ async function deleteFile(path,sha,name){
     const r=await fetch(url,{method:'DELETE',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify({message:`Delete: ${name}`,sha,branch:BRANCH})});
     if(r.ok){showToast('已删除');await loadAllFiles();}
     else{const e=await r.json();showToast('删除失败: '+(e.message||''),true);}
+}
+// 递归删除文件夹（GitHub Contents API 不支持一次删目录，需逐文件删）
+async function deleteFolderRecursive(path){
+    const url=`${API_BASE}/contents/${encPath(path)}?ref=${BRANCH}`;
+    const r=await fetch(url,{headers:authHeaders()});
+    if(!r.ok)return;
+    const d=await r.json();
+    const arr=Array.isArray(d)?d:[d];
+    for(const item of arr){
+        if(item.type==='file'){
+            const dr=await fetch(`${API_BASE}/contents/${encPath(item.path)}`,{method:'DELETE',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify({message:`Delete: ${item.path}`,sha:item.sha,branch:BRANCH})});
+            if(!dr.ok)showToast('删除失败: '+item.name,true);
+        }else if(item.type==='dir'){
+            await deleteFolderRecursive(item.path);
+        }
+    }
+}
+async function deleteFolder(path,name){
+    if(!confirm(`确定删除整个文件夹 "${name}" 及其所有内容？此操作不可恢复。`))return;
+    await deleteFolderRecursive(path);
+    showToast('文件夹已删除');
+    await loadAllFiles();
 }
 // 真正下载：fetch 文件为 blob 后用 a.download 触发下载，避免 txt/html 在浏览器直接打开
 async function downloadFile(f){
@@ -417,8 +502,12 @@ async function downloadFile(f){
 // ======== 渲染 ========
 function showLoading(){document.getElementById('fileList').innerHTML='<div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div>';}
 function sortAndRender(){
-    if(currentSort==='name')allFiles.sort((a,b)=>a.name.localeCompare(b.name));
-    else allFiles.sort((a,b)=>(b.size||0)-(a.size||0));
+    // 文件夹始终排在前面
+    allFiles.sort((a,b)=>{
+        if((a.type==='dir')!==(b.type==='dir'))return a.type==='dir'?-1:1;
+        if(currentSort==='name')return a.name.localeCompare(b.name);
+        return (b.size||0)-(a.size||0);
+    });
     renderFiles(allFiles);
     updateStats();
 }
@@ -428,6 +517,17 @@ function renderFiles(files){
     c.innerHTML=files.map(f=>createCard(f)).join('');
 }
 function createCard(f){
+    if(f.type==='dir'){
+        return `
+        <div class="file-card folder-card" onclick="openFolder('${escJs(f.path)}')">
+            <div class="file-icon">📁</div>
+            <h4>${esc(f.name)}</h4>
+            <div class="file-meta">文件夹</div>
+            <div class="file-actions">
+                <button class="del-btn" onclick="event.stopPropagation();deleteFolder('${escJs(f.path)}','${escJs(f.name)}')">🗑</button>
+            </div>
+        </div>`;
+    }
     const icon=getIcon(f.name);
     const size=formatSize(f.size);
     const tag=getTypeTag(f.name);
