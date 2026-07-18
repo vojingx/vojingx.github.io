@@ -102,6 +102,10 @@ padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
 .upload-btns{display:flex;gap:10px;justify-content:center;margin:8px 0;}
 .folder-card{cursor:pointer;border:1px solid #ffe0b2;background:#fffaf2;}
 .folder-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);}
+.agree-row{margin:14px 0 4px;font-size:13px;color:#666;text-align:center;}
+.agree-row label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+.agree-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;}
+.agree-row a{color:#1e3c72;text-decoration:underline;font-weight:600;}
 </style>
 </head>
 <body>
@@ -129,6 +133,9 @@ padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
 <input type="password" id="authPassword" placeholder="密码" maxlength="30" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()">
 <input type="password" id="authPassword2" placeholder="确认密码" maxlength="30" autocomplete="new-password" onkeydown="if(event.key==='Enter')doAuth()" style="display:none">
 <button class="btn btn-primary" onclick="doAuth()" id="authBtn">登 录</button>
+<div class="agree-row">
+  <label><input type="checkbox" id="agreePrivacy"> 我已阅读并同意 <a href="javascript:void(0)" onclick="openPrivacy()">《隐私协议》</a></label>
+</div>
 <p class="err" id="authErr"></p>
 <a class="switch" id="authSwitch" onclick="toggleAuthMode()">没有账户？立即注册 →</a>
 </div>
@@ -283,11 +290,28 @@ async function saveUsers(users,message){
     if(!r.ok){const e=await r.json();throw new Error(e.message||'Save failed');}
 }
 // ======== 登录/注册 ========
+async function openPrivacy(){
+    const url='https://vojingx.github.io/'+encodeURIComponent('隐私协议.txt');
+    try{
+        const r=await fetch(url);
+        if(!r.ok)throw new Error('未找到隐私协议文件');
+        const blob=await r.blob();
+        const a=document.createElement('a');
+        a.href=URL.createObjectURL(blob);
+        a.download='隐私协议.txt';
+        document.body.appendChild(a);a.click();a.remove();
+        showToast('《隐私协议》已开始下载');
+    }catch(e){
+        window.open(url,'_blank'); // 下载失败则新标签打开查看
+        showToast('已打开《隐私协议》',true);
+    }
+}
 async function doAuth(){
     const u=document.getElementById('authUsername').value.trim();
     const p=document.getElementById('authPassword').value;
     const errEl=document.getElementById('authErr');
     errEl.textContent='';
+    if(!document.getElementById('agreePrivacy').checked){errEl.textContent='请先阅读并勾选同意《隐私协议》';return;}
     if(!/^[a-zA-Z0-9_\-]{2,20}$/.test(u)){errEl.textContent='用户名仅限字母/数字/下划线/短横，2-20位';return;}
     if(p.length<3){errEl.textContent='密码至少3个字符';return;}
     if(authMode==='register'){
