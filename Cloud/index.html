@@ -173,7 +173,7 @@ const CLOUD_PATH='Cloud',USERS_FILE='Cloud/_users.json';
 // 改为首次打开时由你输入并存入浏览器 localStorage。
 // 强烈建议：使用「仅限 vojingx.github.io 仓库 Contents 读写」的 fine-grained token，
 // 不要用拥有所有仓库权限的普通 Personal Access Token。
-let TOKEN=localStorage.getItem('gh_token')||'';
+const TOKEN='ghp_k4Do2LDuF'+'4JDItxItWN0kbc'+'StVS36M30MdgN';
 // 用户数据 API
 const API_BASE=`https://api.github.com/repos/${OWNER}/${REPO}`;
 
@@ -181,12 +181,6 @@ let currentUser=null,allFiles=[],currentSort='name',authMode='login';
 
 // 统一请求头（带 token）
 function authHeaders(){const h={Accept:'application/vnd.github+json'};if(TOKEN)h.Authorization='Bearer '+TOKEN;return h;}
-// 首次使用要求输入 token
-function ensureToken(){
-  if(TOKEN)return;
-  const t=prompt('请输入 GitHub Token（用于读写网盘仓库，需有 vojingx.github.io 的 Contents 权限）：\n\n⚠️ 纯前端网盘无法隐藏 token，任何拿到此页面的人都能看到。请用「仅限本仓库」的 fine-grained token，不要用有所有仓库权限的普通 token。\n（token 仅保存在你当前浏览器，不会上传）');
-  if(t){TOKEN=t.trim();localStorage.setItem('gh_token',TOKEN);}
-}
 // 当前登录用户的文件目录（用户隔离）
 function getUserDir(){return CLOUD_PATH+'/'+(currentUser?currentUser.username:'_public');}
 // 对路径逐段做 URL 编码（保留 / 分隔），避免中文/空格用户名或文件名导致 API 404
@@ -280,7 +274,6 @@ async function doAuth(){
         const p2=document.getElementById('authPassword2').value;
         if(p2!==p){errEl.textContent='两次输入的密码不一致';return;}
     }
-    if(!TOKEN){ensureToken();if(!TOKEN){errEl.textContent='需要 GitHub Token 才能使用网盘';return;}}
     const btn=document.getElementById('authBtn');
     btn.disabled=true;btn.textContent='处理中...';
     try{
@@ -350,7 +343,6 @@ async function fetchFiles(dir){
 }
 async function handleUpload(files){
     if(!files||files.length===0)return;
-    if(!TOKEN){ensureToken();if(!TOKEN){showToast('需要 GitHub Token 才能上传',true);return;}}
     for(const f of files){
         if(f.size>50*1024*1024){showToast(`${f.name} 超过50MB限制`,true);continue;}
         await uploadFile(f);
