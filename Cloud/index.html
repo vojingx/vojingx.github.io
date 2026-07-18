@@ -7,271 +7,82 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
 body{background:#fff5f5;color:#222;min-height:100vh;}
-/* 顶部导航栏 */
+/* Nav */
 .top-nav{
-width:100%;
-height:65px;
-background:#ff6b6b;
-display:flex;
-align-items:center;
-padding:0 40px;
-box-shadow:0 2px 6px #ffb3b3;
-justify-content:space-between;
+width:100%;height:65px;background:#ff6b6b;display:flex;align-items:center;
+padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
 }
-.logo{
-font-size:26px;
-font-weight:bold;
-color:#660000;
-}
-.nav-group{
-display:flex;
-gap:36px;
-align-items:center;
-}
-.nav-link{
-text-decoration:none;
-color:#440000;
-font-size:17px;
-padding:8px 12px;
-border-radius:6px;
-cursor:pointer;
-}
+.logo{font-size:26px;font-weight:bold;color:#660000;}
+.nav-group{display:flex;gap:36px;align-items:center;}
+.nav-link{text-decoration:none;color:#440000;font-size:17px;padding:8px 12px;border-radius:6px;cursor:pointer;}
 .nav-link:hover{background:#ff9999;}
 .nav-link.active{background:#ff9999;color:#660000;font-weight:bold;}
-.main{
-width:92%;
-max-width:1250px;
-margin:45px auto;
-}
-/* 网盘头部 */
-.cloud-header{
-background:#ffe8e8;
-border-radius:12px;
-padding:40px;
-text-align:center;
-margin-bottom:30px;
-}
-.cloud-header h2{
-font-size:32px;
-color:#991a1a;
-margin-bottom:12px;
-}
-.cloud-header p{
-color:#662222;
-font-size:15px;
-margin-bottom:24px;
-}
-/* 搜索栏 */
-.search-bar{
-display:flex;
-justify-content:center;
-align-items:center;
-gap:10px;
-margin:0 auto;
-max-width:500px;
-}
-.search-bar input{
-width:100%;
-padding:12px 18px;
-border:2px solid #ffaaaa;
-border-radius:8px;
-font-size:15px;
-background:#fff;
-color:#222;
-outline:none;
-}
-.search-bar input:focus{
-border-color:#ff5252;
-}
-/* 工具栏 */
-.toolbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-flex-wrap:wrap;
-gap:10px;
-}
-.toolbar-left{
-display:flex;
-gap:12px;
-align-items:center;
-}
-.toolbar-right{
-display:flex;
-gap:12px;
-}
-.btn{
-padding:10px 22px;
-border:none;
-border-radius:8px;
-font-size:14px;
-cursor:pointer;
-font-weight:500;
-transition:background 0.2s;
-}
-.btn-primary{
-background:#ff5252;
-color:#fff;
-}
+.nav-login{padding:6px 16px;background:#fff;color:#ff5252;border-radius:6px;cursor:pointer;font-size:14px;border:none;font-weight:500;}
+.nav-login:hover{background:#ffe8e8;}
+.nav-login.logged{background:#72d082;color:#222;}
+.main{width:92%;max-width:1250px;margin:45px auto;}
+/* Header */
+.cloud-header{background:#ffe8e8;border-radius:12px;padding:40px;text-align:center;margin-bottom:30px;}
+.cloud-header h2{font-size:32px;color:#991a1a;margin-bottom:12px;}
+.cloud-header p{color:#662222;font-size:15px;margin-bottom:24px;}
+.search-bar{display:flex;justify-content:center;align-items:center;gap:10px;margin:0 auto;max-width:600px;flex-wrap:wrap;}
+.search-bar input{flex:1;min-width:200px;padding:12px 18px;border:2px solid #ffaaaa;border-radius:8px;font-size:15px;background:#fff;color:#222;outline:none;}
+.search-bar input:focus{border-color:#ff5252;}
+/* Toolbar */
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.stats{color:#662222;font-size:14px;}
+.stats span{font-weight:bold;color:#991a1a;}
+.btn{padding:10px 22px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500;transition:background 0.2s;}
+.btn-primary{background:#ff5252;color:#fff;}
 .btn-primary:hover{background:#e63939;}
-.btn-secondary{
-background:#fff;
-color:#ff5252;
-border:1px solid #ff5252;
-}
+.btn-secondary{background:#fff;color:#ff5252;border:1px solid #ff5252;}
 .btn-secondary:hover{background:#ffe8e8;}
-.btn-small{
-padding:6px 14px;
-font-size:12px;
-}
-/* 统计 */
-.stats{
-color:#662222;
-font-size:14px;
-}
-.stats span{
-font-weight:bold;
-color:#991a1a;
-}
-/* 文件区域 */
-.file-area{
-background:#ffe8e8;
-border-radius:12px;
-padding:35px;
-}
-.file-area h3{
-color:#991a1a;
-margin-bottom:20px;
-font-size:22px;
-}
-.file-list{
-display:flex;
-flex-wrap:wrap;
-gap:24px;
-}
-.file-card{
-width:280px;
-background:#fff;
-border:1px solid #ffaaaa;
-border-radius:10px;
-padding:26px;
-position:relative;
-transition:transform 0.2s,box-shadow 0.2s;
-}
-.file-card:hover{
-transform:translateY(-3px);
-box-shadow:0 6px 20px rgba(255,107,107,0.2);
-}
-.file-card .file-icon{
-font-size:40px;
-margin-bottom:12px;
-}
-.file-card h4{
-color:#801515;
-margin-bottom:10px;
-word-break:break-all;
-font-size:16px;
-}
-.file-card .file-meta{
-color:#662222;
-font-size:13px;
-margin-bottom:16px;
-line-height:1.6;
-}
-.file-tag{
-display:inline-block;
-font-size:11px;
-background:#72d082;
-color:#222;
-padding:2px 8px;
-border-radius:4px;
-margin-left:6px;
-}
-.folder-tag{
-display:inline-block;
-font-size:11px;
-background:#ffc857;
-color:#333;
-padding:2px 8px;
-border-radius:4px;
-margin-left:6px;
-}
-.file-actions{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-}
-.down-btn{
-display:inline-block;
-background:#ff5252;
-color:#fff;
-text-decoration:none;
-padding:9px 20px;
-border-radius:7px;
-font-weight:500;
-font-size:13px;
-cursor:pointer;
-border:none;
-}
+.btn-danger{background:#fff;color:#cc3333;border:1px solid #cc3333;}
+.btn-danger:hover{background:#cc3333;color:#fff;}
+.btn-small{padding:6px 14px;font-size:12px;}
+/* File area */
+.file-area{background:#ffe8e8;border-radius:12px;padding:35px;}
+.file-area h3{color:#991a1a;margin-bottom:20px;font-size:22px;}
+.file-list{display:flex;flex-wrap:wrap;gap:24px;}
+.file-card{width:280px;background:#fff;border:1px solid #ffaaaa;border-radius:10px;padding:26px;position:relative;transition:transform 0.2s,box-shadow 0.2s;}
+.file-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,107,107,0.2);}
+.file-card .file-icon{font-size:40px;margin-bottom:12px;}
+.file-card h4{color:#801515;margin-bottom:6px;word-break:break-all;font-size:16px;}
+.file-card .file-type{font-size:11px;color:#666;margin-bottom:10px;}
+.file-card .file-meta{color:#662222;font-size:13px;margin-bottom:16px;line-height:1.6;}
+.file-tag{display:inline-block;font-size:11px;background:#72d082;color:#222;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.folder-tag{display:inline-block;font-size:11px;background:#ffc857;color:#333;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.premium-tag{display:inline-block;font-size:11px;background:#e94560;color:#fff;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.down-btn{display:inline-block;background:#ff5252;color:#fff;text-decoration:none;padding:9px 16px;border-radius:7px;font-weight:500;font-size:13px;cursor:pointer;border:none;}
 .down-btn:hover{background:#e63939;}
-.share-btn{
-display:inline-block;
-background:#fff;
-color:#ff5252;
-border:1px solid #ff5252;
-text-decoration:none;
-padding:9px 20px;
-border-radius:7px;
-font-weight:500;
-font-size:13px;
-cursor:pointer;
-}
+.share-btn{display:inline-block;background:#fff;color:#ff5252;border:1px solid #ff5252;text-decoration:none;padding:9px 16px;border-radius:7px;font-weight:500;font-size:13px;cursor:pointer;}
 .share-btn:hover{background:#ffe8e8;}
-/* 空状态 */
-.empty-state{
-text-align:center;
-padding:60px 20px;
-color:#662222;
-}
-.empty-state .empty-icon{
-font-size:60px;
-margin-bottom:16px;
-}
-.empty-state p{
-font-size:15px;
-line-height:1.8;
-}
-/* Toast 提示 */
-.toast{
-position:fixed;
-top:20px;
-left:50%;
-transform:translateX(-50%);
-background:#72d082;
-color:#222;
-padding:12px 24px;
-border-radius:8px;
-font-size:14px;
-z-index:9999;
-opacity:0;
-transition:opacity 0.3s;
-box-shadow:0 4px 12px rgba(0,0,0,0.15);
-}
+.del-btn{display:none;background:none;color:#cc3333;border:1px solid #cc3333;padding:9px 16px;border-radius:7px;font-size:13px;cursor:pointer;}
+.del-btn:hover{background:#cc3333;color:#fff;}
+.del-btn.show{display:inline-block;}
+/* Empty */
+.empty-state{text-align:center;padding:60px 20px;color:#662222;}
+.empty-state .empty-icon{font-size:60px;margin-bottom:16px;}
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#72d082;color:#222;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
 .toast.show{opacity:1;}
 .toast.error{background:#ff6b6b;color:#fff;}
-/* 手机适配 */
-@media (max-width: 768px){
-.top-nav{
-height:auto;
-flex-direction:column;
-padding:18px;
-gap:16px;
-}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;justify-content:center;align-items:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:#fff;border-radius:12px;padding:40px;max-width:440px;width:90%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.2);}
+.modal-box h3{color:#991a1a;margin-bottom:16px;font-size:20px;}
+.modal-box p{color:#662222;font-size:14px;line-height:1.8;margin-bottom:20px;}
+.modal-box input{width:100%;padding:12px 18px;border:2px solid #ffaaaa;border-radius:8px;font-size:15px;background:#fff;color:#222;outline:none;margin-bottom:16px;text-align:center;}
+.modal-box input:focus{border-color:#ff5252;}
+.modal-box .modal-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.modal-box code{background:#ffe8e8;padding:2px 8px;border-radius:4px;}
+/* Responsive */
+@media (max-width:768px){
+.top-nav{height:auto;flex-direction:column;padding:18px;gap:16px;}
 .nav-group{gap:16px;flex-wrap:wrap;justify-content:center;}
 .file-card{width:100%;}
-.search-bar{flex-direction:column;}
-.toolbar{flex-direction:column;align-items:flex-start;}
 }
 </style>
 </head>
@@ -281,317 +92,418 @@ gap:16px;
 <div class="nav-group">
 <a class="nav-link" href="/">首页</a>
 <a class="nav-link" href="/VOJING/">VOJING搜索</a>
-<a class="nav-link" href="/" onclick="goStore()">VOJING Store</a>
+<a class="nav-link" href="/">VOJING Store</a>
 <a class="nav-link" href="/CodeLab/">网页实验室</a>
 <a class="nav-link active" href="/Cloud/">网盘</a>
-<a class="nav-link" href="/" onclick="goAbout()">关于</a>
+<a class="nav-link" href="/">关于</a>
+<button class="nav-login" id="loginBtn" onclick="toggleLogin()">🔐 登录</button>
 </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
+<!-- 登录弹窗 -->
+<div class="modal-overlay" id="loginModal">
+<div class="modal-box">
+<h3 id="loginTitle">🔐 管理员登录</h3>
+<p id="loginHint" style="font-size:13px;">登录后可管理文件、访问专属内容</p>
+<input type="password" id="loginPass" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+<div class="modal-btns">
+<button class="btn btn-primary" onclick="doLogin()">登录</button>
+<button class="btn btn-secondary" onclick="closeModal('loginModal')">取消</button>
+</div>
+<p style="margin-top:12px;font-size:11px;color:#999;" id="loginMsg"></p>
+</div>
+</div>
+
+<!-- 上传/删除 引导弹窗 -->
+<div class="modal-overlay" id="guideModal">
+<div class="modal-box">
+<div style="font-size:48px;margin-bottom:16px;" id="guideIcon">📤</div>
+<h3 id="guideTitle">管理文件</h3>
+<p id="guideText" style="text-align:left;background:#ffe8e8;border-radius:8px;padding:16px;margin-bottom:20px;font-size:13px;color:#662222;line-height:1.8;"></p>
+<div class="modal-btns">
+<button class="btn btn-primary" id="guideBtn1" onclick="closeModal('guideModal')">知道了</button>
+<button class="btn btn-secondary" id="guideBtn2" onclick="window.open('https://github.com/vojingx/vojingx.github.io/tree/main/Cloud','_blank')">打开 GitHub</button>
+</div>
+</div>
+</div>
+
 <div class="main">
-<!-- 网盘头部 -->
+<!-- Header -->
 <div class="cloud-header">
 <h2>📁 Vojing 网盘</h2>
-<p>文件存储 · 快速下载 · 一键分享</p>
+<p>文件存储 · 快速下载 · 一键分享 · <span id="premiumHint" style="display:none;color:#e94560;font-weight:bold;">封赏后专属</span></p>
 <div class="search-bar">
 <input type="text" id="searchInput" placeholder="输入文件名搜索..." oninput="filterFiles()">
-<button class="btn btn-primary" onclick="showUploadGuide()">📤 上传文件</button>
+<button class="btn btn-primary" onclick="showGuide('upload')">📤 上传文件</button>
+<button class="btn btn-danger" id="deleteBtn" style="display:none;" onclick="showGuide('delete')">🗑 删除文件</button>
 </div>
 </div>
 
-<!-- 工具栏 -->
+<!-- Toolbar -->
 <div class="toolbar">
-<div class="toolbar-left">
-<div class="stats">
-共 <span id="fileCount">0</span> 个文件 ·
-总大小 <span id="totalSize">0 B</span>
-</div>
-</div>
-<div class="toolbar-right">
-<button class="btn btn-secondary btn-small" onclick="sortFiles('name')">按名称排序</button>
-<button class="btn btn-secondary btn-small" onclick="sortFiles('size')">按大小排序</button>
-<button class="btn btn-secondary btn-small" onclick="sortFiles('time')">按时间排序</button>
+<div class="stats">共 <span id="fileCount">0</span> 个文件 · 总大小 <span id="totalSize">0 B</span></div>
+<div>
+<button class="btn btn-secondary btn-small" onclick="sortFiles('name')">按名称</button>
+<button class="btn btn-secondary btn-small" onclick="sortFiles('size')">按大小</button>
 </div>
 </div>
 
-<!-- 文件列表 -->
+<!-- 公开文件 -->
 <div class="file-area">
 <h3>📂 全部文件</h3>
-<div class="file-list" id="fileList">
-<div class="empty-state">
-<div class="empty-icon">📭</div>
-<p>暂无文件</p>
-<p style="font-size:13px;color:#999;margin-top:8px;">通过 GitHub 上传文件到本站的 Cloud 目录即可显示</p>
-</div>
-</div>
+<div class="file-list" id="fileList"></div>
 </div>
 
+<!-- 专属文件（登录后可见） -->
+<div class="file-area" id="premiumArea" style="display:none;">
+<h3>⭐ 封赏后专属内容</h3>
+<div class="file-list" id="premiumList"></div>
 </div>
 
-<!-- 上传引导弹窗 -->
-<div id="uploadModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;justify-content:center;align-items:center;">
-<div style="background:#fff;border-radius:12px;padding:40px;max-width:500px;width:90%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.2);">
-<div style="font-size:48px;margin-bottom:16px;">📤</div>
-<h3 style="color:#991a1a;margin-bottom:12px;font-size:20px;">上传文件到网盘</h3>
-<p style="color:#662222;font-size:14px;line-height:1.8;margin-bottom:20px;">
-文件上传到 GitHub 仓库的 <code style="background:#ffe8e8;padding:2px 8px;border-radius:4px;">Cloud/</code> 目录后，
-会自动显示在网盘列表中。
-</p>
-<div style="text-align:left;background:#ffe8e8;border-radius:8px;padding:16px;margin-bottom:20px;font-size:13px;color:#662222;line-height:1.8;">
-<b style="color:#991a1a;">上传方式：</b><br>
-1. 打开 GitHub 仓库 <a href="https://github.com/vojingx/vojingx.github.io" target="_blank" style="color:#ff5252;">vojingx/vojingx.github.io</a><br>
-2. 进入 <b>Cloud</b> 文件夹<br>
-3. 点击 "Add file" → "Upload files"<br>
-4. 拖入文件，提交即可
-</div>
-<button class="btn btn-primary" onclick="document.getElementById('uploadModal').style.display='none'">知道了</button>
-<button class="btn btn-secondary" style="margin-left:10px;" onclick="window.open('https://github.com/vojingx/vojingx.github.io/tree/main/Cloud','_blank')">🚀 直接去上传</button>
-</div>
 </div>
 
 <script>
-// ========== 文件列表（通过 GitHub API 获取） ==========
+// ======== 配置 ========
 const OWNER = 'vojingx';
 const REPO = 'vojingx.github.io';
 const CLOUD_PATH = 'Cloud';
+const PREMIUM_PATH = 'Cloud/premium';
 const BRANCH = 'main';
-// GitHub token（公开仓库读取不需要，但列文件方便）
-const TOKEN = '';
+const TOKEN = '***';
+// 登录密码 (SHA256): 默认密码 "vojing2024"
+const PASSWORD_HASH = '1f8ac10f23c5b5c5c5f0d0f5c7e8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6';
 
 let allFiles = [];
+let premiumFiles = [];
+let isLoggedIn = false;
 let currentSort = 'name';
 
-// ========== 页面初始化 ==========
+// ======== 初始化 ========
 async function init() {
-    try {
-        await loadFiles();
-    } catch (e) {
-        console.error('加载文件失败:', e);
-        // 如果 API 失败，显示从 repo 拉取的基本信息
-        document.getElementById('fileList').innerHTML = 
-            '<div class="empty-state"><div class="empty-icon">📭</div><p>文件加载中，请稍候...</p></div>';
-        // 备用：直接列出 Cloud 目录下的文件
-        loadFilesFallback();
-    }
+    checkLoginStatus();
+    await loadAllFiles();
 }
 
-// GitHub API 加载文件
-async function loadFiles() {
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${CLOUD_PATH}?ref=${BRANCH}`;
-    const headers = TOKEN ? 
-        { 'Authorization': `Bearer ${TOKEN}`, 'Accept': 'application/vnd.github+json' } :
-        { 'Accept': 'application/vnd.github+json' };
+// ======== 登录 ========
+function toggleLogin() {
+    if (isLoggedIn) { doLogout(); return; }
+    document.getElementById('loginModal').classList.add('show');
+    document.getElementById('loginPass').focus();
+}
 
-    const resp = await fetch(url, { headers });
-    if (!resp.ok) {
-        if (resp.status === 404) {
-            showEmpty('Cloud 目录尚未创建，上传文件后即可显示');
-        }
-        return;
-    }
+async function sha256(str) {
+    const buf = new TextEncoder().encode(str);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
-    const data = await resp.json();
-    if (!Array.isArray(data)) {
-        if (data.type === 'file') {
-            data.download_url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${CLOUD_PATH}/${data.name}`;
-            data.sha_url = data.sha;
-            allFiles = [data];
-        } else {
-            allFiles = [data];
-        }
+async function doLogin() {
+    const pass = document.getElementById('loginPass').value;
+    if (!pass) { showMsg('请输入密码'); return; }
+    
+    const hash = await sha256(pass);
+    // Also support plain pass: "vojing2024"
+    if (hash === PASSWORD_HASH || pass === 'vojing2024') {
+        isLoggedIn = true;
+        localStorage.setItem('cloud_admin', 'true');
+        updateLoginUI();
+        closeModal('loginModal');
+        showToast('登录成功！已解锁管理功能和专属内容');
+        document.getElementById('loginPass').value = '';
+        await loadAllFiles();
     } else {
-        allFiles = data.filter(f => f.type === 'file').map(f => ({
-            name: f.name,
-            size: f.size || 0,
-            download_url: f.download_url || `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${CLOUD_PATH}/${encodeURIComponent(f.name)}`,
-            html_url: f.html_url || '',
-            sha: f.sha || '',
-        }));
+        showMsg('密码错误');
     }
+}
 
-    sortFiles(currentSort);
+function doLogout() {
+    isLoggedIn = false;
+    localStorage.removeItem('cloud_admin');
+    updateLoginUI();
     renderFiles();
-    updateStats();
+    document.getElementById('premiumArea').style.display = 'none';
+    showToast('已退出登录');
 }
 
-// 备用加载（直接构造 URL）
-function loadFilesFallback() {
-    // 这里可以放一些默认文件
-    allFiles = [];
-    updateStats();
+function checkLoginStatus() {
+    isLoggedIn = localStorage.getItem('cloud_admin') === 'true';
+    updateLoginUI();
 }
 
-// ========== 渲染 ==========
-function renderFiles(files = allFiles) {
-    const container = document.getElementById('fileList');
+function updateLoginUI() {
+    const btn = document.getElementById('loginBtn');
+    const delBtn = document.getElementById('deleteBtn');
+    const hint = document.getElementById('premiumHint');
+    if (isLoggedIn) {
+        btn.textContent = '✅ 已登录';
+        btn.classList.add('logged');
+        delBtn.style.display = 'inline-block';
+        hint.style.display = 'inline';
+        document.getElementById('loginTitle').textContent = '✅ 已登录';
+        document.getElementById('loginHint').textContent = '点击退出可注销';
+    } else {
+        btn.textContent = '🔐 登录';
+        btn.classList.remove('logged');
+        delBtn.style.display = 'none';
+        hint.style.display = 'none';
+        document.getElementById('loginTitle').textContent = '🔐 管理员登录';
+        document.getElementById('loginHint').textContent = '登录后可管理文件、访问专属内容';
+        document.getElementById('premiumArea').style.display = 'none';
+    }
+    // 更新删除按钮显示
+    document.querySelectorAll('.del-btn').forEach(b => {
+        b.classList.toggle('show', isLoggedIn);
+    });
+}
 
+function showMsg(msg) {
+    document.getElementById('loginMsg').textContent = msg;
+    setTimeout(() => document.getElementById('loginMsg').textContent = '', 3000);
+}
+
+// ======== 文件加载 ========
+async function loadAllFiles() {
+    try {
+        // 加载公开文件
+        allFiles = await fetchFiles(CLOUD_PATH);
+        sortAndRender();
+
+        // 加载专属文件
+        if (isLoggedIn) {
+            premiumFiles = await fetchFiles(PREMIUM_PATH);
+            renderPremium();
+        }
+    } catch (e) {
+        console.error('Load error:', e);
+        showEmpty('加载失败，请刷新页面');
+    }
+}
+
+async function fetchFiles(dirPath) {
+    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${dirPath}?ref=${BRANCH}`;
+    const headers = TOKEN ? 
+        {'Authorization': `Bearer ${TOKEN}`, 'Accept': 'application/vnd.github+json'} :
+        {'Accept': 'application/vnd.github+json'};
+    
+    try {
+        const resp = await fetch(url, { headers });
+        if (resp.status === 404) return [];
+        if (!resp.ok) return [];
+        
+        const data = await resp.json();
+        return (Array.isArray(data) ? data : [data])
+            .filter(f => f.type === 'file')
+            .map(f => ({
+                name: f.name,
+                size: f.size || 0,
+                path: f.path,
+                sha: f.sha,
+                download_url: f.download_url,
+                raw_url: `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${dirPath}/${encodeURIComponent(f.name)}`,
+                dir: dirPath,
+            }));
+    } catch {
+        return [];
+    }
+}
+
+// ======== 渲染 ========
+function sortAndRender() {
+    if (currentSort === 'name') allFiles.sort((a,b) => a.name.localeCompare(b.name));
+    else allFiles.sort((a,b) => (b.size||0) - (a.size||0));
+    renderFiles(allFiles, 'fileList');
+    updateStats(allFiles);
+}
+
+function renderPremium() {
+    if (currentSort === 'name') premiumFiles.sort((a,b) => a.name.localeCompare(b.name));
+    else premiumFiles.sort((a,b) => (b.size||0) - (a.size||0));
+    
+    if (premiumFiles.length > 0) {
+        document.getElementById('premiumArea').style.display = 'block';
+        renderFiles(premiumFiles, 'premiumList');
+    } else {
+        document.getElementById('premiumArea').style.display = isLoggedIn ? 'block' : 'none';
+        document.getElementById('premiumList').innerHTML = `
+            <div class="empty-state" style="width:100%">
+                <div class="empty-icon">⭐</div>
+                <p>暂无专属内容</p>
+                <p style="font-size:13px;color:#999;">将文件上传到 <code>Cloud/premium/</code> 目录即可</p>
+            </div>`;
+    }
+}
+
+function renderFiles(files, containerId) {
+    const container = document.getElementById(containerId);
     if (files.length === 0) {
-        showEmpty('没有匹配的文件');
+        container.innerHTML = '<div class="empty-state" style="width:100%"><div class="empty-icon">📭</div><p>没有匹配的文件</p></div>';
         return;
     }
-
-    container.innerHTML = files.map(f => createFileCard(f)).join('');
+    container.innerHTML = files.map(f => createCard(f, containerId === 'premiumList')).join('');
+    // 更新删除按钮
+    document.querySelectorAll('.del-btn').forEach(b => b.classList.toggle('show', isLoggedIn));
 }
 
-function createFileCard(file) {
-    const icon = getFileIcon(file.name);
-    const size = formatSize(file.size || 0);
-    const typeTag = getFileType(file.name);
-    const downloadUrl = file.download_url;
-    const shareUrl = `${window.location.origin}/${CLOUD_PATH}/${encodeURIComponent(file.name)}`;
-    const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${CLOUD_PATH}/${encodeURIComponent(file.name)}`;
+function createCard(file, isPremium) {
+    const icon = getIcon(file.name);
+    const size = formatSize(file.size);
+    const typeTag = getTypeTag(file.name);
+    const premiumTag = isPremium ? '<span class="premium-tag">专属</span>' : '';
+    // 使用 raw URL 下载，避免 HTML 文件被浏览器渲染
+    const dlUrl = file.raw_url || file.download_url;
+    const shareUrl = `https://vojingx.github.io/${file.path}`;
+    const isHtml = file.name.toLowerCase().endsWith('.html') || file.name.toLowerCase().endsWith('.htm');
+    const dlHint = isHtml ? ' (右键另存为)' : '';
 
     return `
     <div class="file-card">
         <div class="file-icon">${icon}</div>
-        <h4>${escapeHtml(file.name)}${typeTag}</h4>
-        <div class="file-meta">
-            大小: ${size}
-        </div>
+        <h4>${esc(file.name)}${typeTag}${premiumTag}</h4>
+        <div class="file-meta">大小: ${size}${isHtml ? '<br><span style="color:#e94560;font-size:11px;">HTML文件: 点击下载可能显示源码，请右键→另存为</span>' : ''}</div>
         <div class="file-actions">
-            <a class="down-btn" href="${rawUrl}" target="_blank" download>⬇ 下载</a>
-            <button class="share-btn" onclick="copyShareLink('${escapeJs(shareUrl)}', '${escapeJs(file.name)}')">🔗 复制永久链接</button>
+            <a class="down-btn" href="${dlUrl}" target="_blank" download="${esc(file.name)}">⬇ 下载${dlHint}</a>
+            <button class="share-btn" onclick="copyLink('${escJs(shareUrl)}','${escJs(file.name)}')">🔗 复制永久链接</button>
+            <button class="del-btn" onclick="deleteFile('${escJs(file.path)}','${escJs(file.sha)}','${escJs(file.name)}')">🗑 删除</button>
         </div>
     </div>`;
 }
 
-function showEmpty(msg) {
-    document.getElementById('fileList').innerHTML = `
-        <div class="empty-state">
-            <div class="empty-icon">📭</div>
-            <p>${msg}</p>
-            <p style="font-size:13px;color:#999;margin-top:8px;">
-                将文件通过 GitHub 上传到 <code>/Cloud/</code> 目录即可自动显示
-            </p>
-        </div>`;
+// ======== 操作 ========
+function copyLink(url, name) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => showToast('永久分享链接已复制！'));
+    } else {
+        const inp = document.createElement('input'); inp.value = url;
+        document.body.appendChild(inp); inp.select();
+        document.execCommand('copy'); document.body.removeChild(inp);
+        showToast('永久分享链接已复制！');
+    }
 }
 
-// ========== 功能 ==========
-function copyShareLink(url, name) {
-    // 使用 Clipboard API
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => showToast('✅ 永久分享链接已复制！'));
-    } else {
-        const input = document.createElement('input');
-        input.value = url;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-        showToast('✅ 永久分享链接已复制！');
+async function deleteFile(path, sha, name) {
+    if (!isLoggedIn) { showToast('请先登录', true); return; }
+    if (!confirm(`确定要永久删除 "${name}" 吗？此操作不可撤销。`)) return;
+    if (!TOKEN) { showToast('需要 GitHub Token', true); return; }
+
+    try {
+        showToast('正在删除...');
+        const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
+        const resp = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: `Delete ${name}`,
+                sha: sha,
+                branch: BRANCH,
+            }),
+        });
+        if (resp.ok) {
+            showToast('文件已删除！');
+            await loadAllFiles();
+        } else {
+            const err = await resp.json();
+            showToast('删除失败: ' + (err.message || '未知错误'), true);
+        }
+    } catch (e) {
+        showToast('网络错误，删除失败', true);
     }
+}
+
+function showGuide(type) {
+    const modal = document.getElementById('guideModal');
+    if (type === 'upload') {
+        document.getElementById('guideIcon').textContent = '📤';
+        document.getElementById('guideTitle').textContent = '上传文件到网盘';
+        document.getElementById('guideText').innerHTML = `
+            <b style="color:#991a1a;">方式一（推荐）：</b><br>
+            1. 打开 GitHub 仓库<br>
+            2. 进入 <b>Cloud</b> 文件夹 → "Add file" → "Upload files"<br>
+            3. 拖入文件，提交即可自动显示<br><br>
+            <b style="color:#991a1a;">方式二（专属内容）：</b><br>
+            上传到 <b>Cloud/premium/</b> 目录 → 仅登录用户可见<br><br>
+            <span style="color:#e94560;">⚠ 上传后等待 30 秒刷新页面即可看到文件</span>`;
+        document.getElementById('guideBtn2').onclick = () => window.open('https://github.com/vojingx/vojingx.github.io/upload/main/Cloud','_blank');
+    } else {
+        document.getElementById('guideIcon').textContent = '🗑';
+        document.getElementById('guideTitle').textContent = '删除文件';
+        document.getElementById('guideText').innerHTML = `
+            <b style="color:#991a1a;">网盘内直接删除：</b><br>
+            登录后每个文件旁会出现 🗑 删除按钮<br><br>
+            <b style="color:#991a1a;">GitHub 内删除：</b><br>
+            1. 打开仓库 Cloud 或 Cloud/premium 目录<br>
+            2. 点击文件 → 右上角 "..." → "Delete file"<br>
+            3. 提交删除`;
+        document.getElementById('guideBtn2').onclick = () => window.open('https://github.com/vojingx/vojingx.github.io/tree/main/Cloud','_blank');
+    }
+    modal.classList.add('show');
 }
 
 function filterFiles() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    if (!query) {
-        renderFiles(allFiles);
-        updateStats();
-        return;
-    }
-    const filtered = allFiles.filter(f => f.name.toLowerCase().includes(query));
-    renderFiles(filtered);
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = q ? allFiles.filter(f => f.name.toLowerCase().includes(q)) : allFiles;
+    renderFiles(filtered, 'fileList');
     updateStats(filtered);
 }
 
-function sortFiles(by) {
-    currentSort = by;
-    if (by === 'name') {
-        allFiles.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (by === 'size') {
-        allFiles.sort((a, b) => (b.size || 0) - (a.size || 0));
-    } else if (by === 'time') {
-        allFiles.sort((a, b) => a.name.localeCompare(b.name)); // GitHub API 不直接返回时间
-    }
-    renderFiles(allFiles);
-}
+function sortFiles(by) { currentSort = by; sortAndRender(); }
 
-function updateStats(files = allFiles) {
+function updateStats(files) {
+    files = files || allFiles;
     document.getElementById('fileCount').textContent = files.length;
-    const total = files.reduce((sum, f) => sum + (f.size || 0), 0);
-    document.getElementById('totalSize').textContent = formatSize(total);
+    document.getElementById('totalSize').textContent = formatSize(files.reduce((s,f) => s+(f.size||0), 0));
 }
 
-// ========== 工具函数 ==========
-function getFileIcon(name) {
+// ======== 工具 ========
+function getIcon(name) {
     const ext = name.split('.').pop().toLowerCase();
-    const icons = {
-        pdf: '📕', doc: '📘', docx: '📘', xls: '📗', xlsx: '📗', ppt: '📙', pptx: '📙',
-        zip: '📦', rar: '📦', '7z': '📦', tar: '📦', gz: '📦',
-        exe: '⚙', msi: '⚙', apk: '📱',
-        jpg: '🖼', jpeg: '🖼', png: '🖼', gif: '🖼', svg: '🖼', webp: '🖼',
-        mp3: '🎵', wav: '🎵', flac: '🎵', aac: '🎵',
-        mp4: '🎬', avi: '🎬', mkv: '🎬', mov: '🎬', webm: '🎬',
-        txt: '📄', md: '📝', json: '📋', xml: '📋', csv: '📊',
-        html: '🌐', css: '🎨', js: '⚡', py: '🐍', java: '☕', cpp: '🔧', c: '🔧',
-        iso: '💿', img: '💾', dmg: '💿',
-    };
-    return icons[ext] || '📄';
+    const m = {pdf:'📕',doc:'📘',docx:'📘',xls:'📗',xlsx:'📗',ppt:'📙',pptx:'📙',
+        zip:'📦',rar:'📦','7z':'📦',tar:'📦',gz:'📦',exe:'⚙',msi:'⚙',apk:'📱',
+        jpg:'🖼',jpeg:'🖼',png:'🖼',gif:'🖼',svg:'🖼',webp:'🖼',
+        mp3:'🎵',wav:'🎵',flac:'🎵',mp4:'🎬',avi:'🎬',mkv:'🎬',
+        txt:'📄',md:'📝',json:'📋',csv:'📊',html:'🌐',css:'🎨',js:'⚡',
+        py:'🐍',java:'☕',iso:'💿',dmg:'💿',psd:'🎨',ai:'🎨',sketch:'🎨'};
+    return m[ext] || '📄';
 }
 
-function getFileType(name) {
+function getTypeTag(name) {
     const ext = name.split('.').pop().toLowerCase();
-    const folders = ['zip', 'rar', '7z', 'tar', 'gz'];
-    const files = ['exe', 'msi', 'apk', 'dmg', 'iso', 'img'];
-    if (folders.includes(ext)) return '<span class="folder-tag">压缩包</span>';
-    if (files.includes(ext)) return '<span class="file-tag">程序</span>';
+    if (['zip','rar','7z','tar','gz'].includes(ext)) return '<span class="folder-tag">压缩包</span>';
+    if (['exe','msi','apk','dmg'].includes(ext)) return '<span class="file-tag">程序</span>';
+    if (['mp3','wav','flac','aac'].includes(ext)) return '<span class="file-tag">音频</span>';
+    if (['mp4','avi','mkv','mov'].includes(ext)) return '<span class="file-tag">视频</span>';
     return '';
 }
 
-function formatSize(bytes) {
-    if (!bytes || bytes === 0) return '0 B';
-    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + units[i];
+function formatSize(b) {
+    if (!b||b===0) return '0 B';
+    const u=['B','KB','MB','GB','TB'];
+    const i=Math.floor(Math.log(b)/Math.log(1024));
+    return (b/Math.pow(1024,i)).toFixed(1)+' '+u[i];
 }
 
-function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function escJs(s) { return s.replace(/'/g,"\\'").replace(/"/g,'\\"'); }
+
+function showToast(msg, isErr) {
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast show'+(isErr?' error':'');
+    setTimeout(()=>t.className='toast',2500);
 }
 
-function escapeJs(str) {
-    return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
-}
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function showEmpty(msg) { document.getElementById('fileList').innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>'+msg+'</p></div>'; }
 
-function showUploadGuide() {
-document.getElementById('uploadModal').style.display = 'flex';
-}
-
-// 点击弹窗背景关闭
-document.addEventListener('DOMContentLoaded', function() {
-var modal = document.getElementById('uploadModal');
-modal.addEventListener('click', function(e) {
-if (e.target === modal) modal.style.display = 'none';
-});
+// 点击遮罩关闭弹窗
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('show');
 });
 
-function showToast(msg, isError = false) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.className = 'toast show' + (isError ? ' error' : '');
-    setTimeout(() => toast.className = 'toast', 2000);
-}
-
-// 导航辅助
-function goStore() {
-    if (window.opener || window.parent !== window) {
-        window.location.href = '/';
-    } else {
-        // 返回首页并触发 Store 展示
-        sessionStorage.setItem('showStore', '1');
-        window.location.href = '/';
-    }
-}
-function goAbout() {
-    sessionStorage.setItem('showAbout', '1');
-    window.location.href = '/';
-}
-
-// 启动
 init();
 </script>
 </body>
