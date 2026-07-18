@@ -162,6 +162,7 @@ padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
 <div class="toolbar">
 <div class="stats">共 <span id="fileCount">0</span> 个文件 · 总大小 <span id="totalSize">0 B</span></div>
 <div>
+<button class="btn btn-primary btn-small" onclick="downloadAllCurrent()">⬇ 下载全部</button>
 <button class="btn btn-secondary btn-small" onclick="sortFiles('name')">按名称</button>
 <button class="btn btn-secondary btn-small" onclick="sortFiles('size')">按大小</button>
 <button class="btn btn-secondary btn-small" onclick="loadAllFiles()">🔄 刷新</button>
@@ -503,6 +504,17 @@ async function downloadFile(f){
     }catch(e){
         showToast('下载失败: '+e.message+'（可试试复制永久链接用下载工具）',true);
     }
+}
+// 一键下载当前文件夹内全部文件（不含子文件夹）
+async function downloadAllCurrent(){
+    const files=allFiles.filter(f=>f.type!=='dir');
+    if(!files.length){showToast('当前文件夹没有可下载的文件',true);return;}
+    showToast('开始下载 '+files.length+' 个文件，请允许浏览器多次下载');
+    for(const f of files){
+        await downloadFile({name:f.name,raw_url:f.raw_url});
+        await new Promise(r=>setTimeout(r,500));
+    }
+    showToast('全部下载任务已发起');
 }
 // ======== 渲染 ========
 function showLoading(){document.getElementById('fileList').innerHTML='<div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div>';}
