@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vojing工作室</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
+body{background:#fff5f5;color:#222;}
+/* 顶部导航栏 */
+.top-nav{
+width:100%;
+height:65px;
+background:#ff6b6b;
+display:flex;
+align-items:center;
+padding:0 40px;
+box-shadow:0 2px 6px #ffb3b3;
+justify-content:space-between;
+}
+.logo{
+font-size:26px;
+font-weight:bold;
+color:#660000;
+}
+.nav-group{
+display:flex;
+gap:36px;
+align-items:center;
+}
+.nav-link{
+text-decoration:none;
+color:#440000;
+font-size:17px;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+}
+.nav-link:hover{
+background:#ff9999;
+}
+.main{
+width:92%;
+max-width:1250px;
+margin:45px auto;
+}
+/* 首页欢迎区 */
+.welcome-box{
+background:#ffe8e8;
+border-radius:12px;
+padding:80px 20px;
+text-align:center;
+}
+.welcome-box h2{
+font-size:32px;
+color:#991a1a;
+margin-bottom:30px;
+}
+.start-btn{
+padding:14px 40px;
+background:#ff5252;
+color:#fff;
+border:none;
+border-radius:8px;
+font-size:18px;
+cursor:pointer;
+}
+.start-btn:hover{
+background:#e63939;
+}
+/* VOJING Store 区 */
+.down-area{
+background:#ffe8e8;
+border-radius:12px;
+padding:35px;
+display:none;
+}
+.down-area h2{
+color:#991a1a;
+margin-bottom:20px;
+}
+.down-list{
+display:flex;
+flex-wrap:wrap;
+gap:24px;
+}
+.down-card{
+width:280px;
+background:#fff;
+border:1px solid #ffaaaa;
+border-radius:10px;
+padding:26px;
+}
+.down-card h3{
+color:#801515;
+margin-bottom:12px;
+}
+.down-card p{
+color:#662222;
+margin-bottom:22px;
+font-size:14px;
+line-height:1.6;
+}
+.folder-tag{
+display:inline-block;
+font-size:12px;
+background:#ffc857;
+color:#333;
+padding:2px 6px;
+border-radius:4px;
+margin-left:8px;
+}
+.file-tag{
+display:inline-block;
+font-size:12px;
+background:#72d082;
+color:#222;
+padding:2px 6px;
+border-radius:4px;
+margin-left:8px;
+}
+.down-btn{
+display:inline-block;
+background:#ff5252;
+color:#fff;
+text-decoration:none;
+padding:11px 28px;
+border-radius:7px;
+font-weight:500;
+}
+.down-btn:hover{
+background:#e63939;
+}
+/* 关于页面 */
+.about-box{
+background:#ffe8e8;
+border-radius:12px;
+padding:40px;
+text-align:center;
+display:none;
+}
+.about-box h2{
+color:#991a1a;
+margin-bottom:15px;
+}
+/* 手机适配 */
+@media (max-width: 768px){
+.top-nav{
+height:auto;
+flex-direction:column;
+padding:18px;
+gap:16px;
+}
+.nav-group{
+gap:16px;
+flex-wrap:wrap;
+justify-content:center;
+}
+.down-card{
+width:100%;
+}
+}
+</style>
+</head>
+<body>
+<div class="top-nav">
+<div class="logo">Vojing工作室</div>
+<div class="nav-group">
+<a class="nav-link" onclick="showWelcome()">首页</a>
+<a class="nav-link" onclick="location.href='/VOJING/'">VOJING搜索</a>
+<a class="nav-link" onclick="toggleDownload()">VOJING Store</a>
+<a class="nav-link" onclick="location.href='/CodeLab/'">网页实验室</a>
+<a class="nav-link" id="cloudLink" href="http://hn.frp.one:31645" target="_blank">网盘</a>
+<a class="nav-link" onclick="toggleAbout()">关于</a>
+</div>
+</div>
+
+<div class="main">
+<!-- 首页欢迎 -->
+<div class="welcome-box" id="welcomeBox">
+<h2>欢迎来到 Vojing 工作室</h2>
+<button class="start-btn" onclick="goDownload()">点击开始</button>
+</div>
+
+<!-- VOJING Store -->
+<div class="down-area" id="downloadBox">
+<h2>VOJING Store</h2>
+<div class="down-list">
+<div class="down-card">
+<h3>Vojing Chat <span class="folder-tag">ZIP包</span></h3>
+<p>自研即时聊天软件，支持局域网互相通讯，完整程序文件夹。</p>
+<a class="down-btn" href="/App/VOJING%20Chat.zip" target="_blank">进入下载</a>
+</div>
+<div class="down-card">
+<h3>Vojing 小游戏 <span class="file-tag">单EXE文件</span></h3>
+<p>轻量休闲小游戏，直接运行Play.exe即可游玩，无需额外安装。</p>
+<a class="down-btn" href="/App/Play.exe" target="_blank">立即下载</a>
+</div>
+<div class="down-card">
+<h3>Vojing 视频播放器 <span class="file-tag">单EXE文件</span></h3>
+<p>自研视频播放器，支持多种视频格式，安装即用，流畅播放。</p>
+<a class="down-btn" href="/App/Setup.exe" target="_blank">立即下载</a>
+</div>
+<div class="down-card">
+<h3>Vojing X 浏览器 <span class="file-tag">单EXE文件</span></h3>
+<p>自研轻量浏览器，基于 Chromium 内核，多标签页、智能搜索、下载管理。</p>
+<a class="down-btn" href="/App/Vojing%20X%20浏览器安装包.exe" target="_blank">立即下载</a>
+</div>
+</div>
+</div>
+
+<!-- 关于页面 -->
+<div class="about-box" id="aboutBox">
+<h2>关于我们</h2>
+<p>Vojing 工作室致力于开发简洁实用的 PC 软件，为大家带来更好的数字体验。</p>
+</div>
+</div>
+
+<script>
+// 隐藏全部板块
+function hideAll(){
+    document.getElementById("welcomeBox").style.display = "none";
+    document.getElementById("downloadBox").style.display = "none";
+    document.getElementById("aboutBox").style.display = "none";
+}
+// 首页
+function showWelcome(){
+    hideAll();
+    document.getElementById("welcomeBox").style.display = "block";
+}
+// 点击直接跳资源下载
+function goDownload(){
+    hideAll();
+    document.getElementById("downloadBox").style.display = "block";
+}
+// 下载页面
+function toggleDownload(){
+    hideAll();
+    document.getElementById("downloadBox").style.display = "block";
+}
+// 关于页面
+function toggleAbout(){
+    hideAll();
+    document.getElementById("aboutBox").style.display = "block";
+}
+</script>
+</body>
+</html>
