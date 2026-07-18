@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>CodeLab - Vojing Studio Python终端</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#000;color:#0f0;font-family:Consolas;height:100vh;overflow:hidden}
+        .terminal{width:100vw;height:100vh;padding:56px 20px 20px;display:flex;flex-direction:column}
+        #output{white-space:pre-wrap;margin-bottom:10px;flex-grow:1;overflow-y:auto}
+        .input-line{display:flex;width:100%}
+        .prefix{color:#0cf;margin-right:8px;font-size:16px;white-space:nowrap}
+        #code-input{flex:1;background:transparent;border:none;outline:none;color:#0f0;font-size:16px;width:100%}
+        #code-input:focus{background:#0a0a0a}
+        .privacy-tip{
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            color:#aaa;
+            font-size:12px;
+            pointer-events:none;
+        }
+        /* 右上角红色保存按钮 */
+        .save-btn{
+            position: fixed;
+            top:12px;
+            right:12px;
+            background:#f22;
+            color:#fff;
+            border:none;
+            padding:6px 12px;
+            font-size:14px;
+            border-radius:4px;
+            cursor:pointer;
+        }
+        .save-btn:hover{
+            background:#d00;
+        }
+        /* 左上角绿色返回首页按钮 */
+        .back-btn{
+            position: fixed;
+            top:12px;
+            left:12px;
+            background:#0f0;
+            color:#000;
+            border:none;
+            padding:6px 14px;
+            font-size:14px;
+            border-radius:4px;
+            cursor:pointer;
+            z-index:50;
+        }
+        .back-btn:hover{
+            background:#0c0;
+        }
+    </style>
+</head>
+<body>
+<!-- 左上角返回首页按钮 -->
+<button class="back-btn" id="backBtn">← 返回首页</button>
+<!-- 右上角另存为按钮 -->
+<button class="save-btn" id="saveBtn">另存为</button>
+
+<div class="terminal">
+    <div id="output">Vojing Studio CodeLab Python 终端
+提示：点击蓝色>>>后方输入框输入代码回车运行
+仅支持控制台代码，tkinter/pygame/turtle等图形库已拦截
+>>> </div>
+    <div class="input-line">
+        <span class="prefix">>>></span>
+        <input id="code-input" autocomplete="off">
+    </div>
+    <div class="privacy-tip">Vojing Studio · 尊重您的隐私，所有代码仅本地浏览器运行，不上传服务器</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<script>
+// ====================== 页面配色&功能备注 ======================
+// 蓝色箭头 >>> ：代码输入提示符，标识输入位置
+// 绿色文字：代码、运行输出内容
+// 使用方法：点击蓝色箭头后方输入框，写入Python代码按回车执行
+// 右上角红色按钮：另存为，导出输入框代码为 .py 文件到本地电脑
+// 修复：执行代码前缓存代码，清空输入框也能正常保存
+// 项目归属：Vojing Studio
+// 功能：在线Python纯终端运行工具
+// 限制：自动拦截所有GUI、绘图类代码，仅支持控制台文本代码
+// 隐私说明：所有编写的Python代码仅在本地浏览器执行，不会上传任何数据至网络，保护隐私
+// ======================================================
+let pyodide = null;
+const output = document.getElementById("output");
+const input = document.getElementById("code-input");
+const saveBtn = document.getElementById("saveBtn");
+// 新增代码缓存，解决清空后无法保存
+let lastCode = "";
+
+// 禁止运行的图形库关键词
+const blockWords = ["tkinter", "pygame", "turtle", "PyQt", "QtGui", "PIL.ImageDraw", "matplotlib.pyplot"];
+
+// 加载Pyodide运行环境
+async function loadPy() {
+    pyodide = await loadPyodide();
+    writeLog("Python环境加载完成\n>>> ");
+    input.focus();
+}
+
+// 输出文字到终端窗口
+function writeLog(text) {
+    output.innerText += text;
+    output.scrollTop = output.scrollHeight;
+}
+
+// 检测代码是否包含被拦截的图形库
+function checkBlock(code) {
+    for(let word of blockWords){
+        if(code.includes(word)) return true;
+    }
+    return false;
+}
+
+// 执行Python代码核心逻辑
+async function runCode(code) {
+    // 执行前缓存代码
+    lastCode = code;
+    if(checkBlock(code)){
+        writeLog("错误：检测到图形界面相关代码，本终端仅支持纯控制台程序\n>>> ");
+        return;
+    }
+    try{
+        pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+`);
+        pyodide.runPython(code);
+        const res = pyodide.runPython("sys.stdout.getvalue()");
+        if(res) writeLog(res);
+    }catch(e){
+        writeLog(e.toString()+"\n");
+    }
+    writeLog(">>> ");
+}
+
+// 回车执行代码监听
+input.addEventListener("keydown", async e=>{
+    if(e.key === "Enter"){
+        const code = input.value;
+        writeLog(code+"\n");
+        input.value = "";
+        await runCode(code);
+        input.focus();
+    }
+})
+
+// 另存为按钮功能：读取缓存代码 + 当前输入框代码双重判断
+saveBtn.addEventListener("click", ()=>{
+    // 优先取输入框内容，空则取上次执行的代码
+    let codeText = input.value.trim();
+    if(!codeText) codeText = lastCode.trim();
+
+    if(!codeText){
+        alert("暂无代码可保存！请输入代码或运行一段代码后重试");
+        return;
+    }
+    // 生成py文件下载
+    const blob = new Blob([codeText], {type:"text/plain"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "main.py";
+    a.click();
+    URL.revokeObjectURL(url);
+})
+
+// 返回首页：回到工作室主页
+document.getElementById("backBtn").addEventListener("click", ()=>{
+    location.href = '/';
+})
+
+loadPy();
+</script>
+</body>
+</html>
