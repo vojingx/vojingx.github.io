@@ -540,6 +540,18 @@ async function downloadAllCurrent(){
     }
     showToast('全部下载任务已发起');
 }
+async function downloadAllFolder(path){
+    showToast('正在加载文件夹文件...');
+    const files=await fetchFiles(path);
+    const toDownload=files.filter(f=>f.type==='file'&&f.raw_url);
+    if(!toDownload.length){showToast('该文件夹内没有可下载的文件',true);return;}
+    showToast('开始下载 '+toDownload.length+' 个文件，请允许浏览器多次下载');
+    for(const f of toDownload){
+        await downloadFile({name:f.name,raw_url:f.raw_url});
+        await new Promise(r=>setTimeout(r,500));
+    }
+    showToast('全部下载任务已发起');
+}
 // ======== 渲染 ========
 function showLoading(){document.getElementById('fileList').innerHTML='<div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div>';}
 function sortAndRender(){
@@ -566,6 +578,7 @@ function createCard(f){
             <h4>${esc(f.name)}</h4>
             <div class="file-meta">文件夹</div>
             <div class="file-actions">
+                <button class="down-btn" onclick="event.stopPropagation();downloadAllFolder('${escJs(f.path)}')">⬇ 下载全部</button>
                 <button class="share-btn" onclick="event.stopPropagation();copyLink('${escJs(flink)}')">🔗 复制链接</button>
                 <button class="del-btn" onclick="event.stopPropagation();deleteFolder('${escJs(f.path)}','${escJs(f.name)}')">🗑</button>
             </div>
