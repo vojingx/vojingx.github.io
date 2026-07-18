@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文件分享 · Vojing 网盘</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:#1a1a1a;}
+  .share-wrap{display:flex;gap:24px;max-width:760px;width:100%;flex-wrap:wrap;}
+  .box{background:#fff;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.25);padding:28px;}
+  .box-left{flex:1 1 300px;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;background:linear-gradient(160deg,#ffffff 0%,#f3f7ff 100%);}
+  .box-right{flex:1 1 300px;display:flex;flex-direction:column;min-height:280px;}
+  .shop-logo{font-size:54px;text-align:center;margin-bottom:8px;}
+  .shop-name{font-size:26px;font-weight:800;text-align:center;color:#1e3c72;letter-spacing:1px;}
+  .shop-sub{font-size:13px;text-align:center;color:#888;margin-top:4px;letter-spacing:3px;}
+  .left-actions{display:flex;flex-direction:column;gap:12px;margin-top:24px;}
+  .btn{display:block;text-align:center;padding:14px;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;cursor:pointer;transition:transform .1s,box-shadow .2s;border:none;}
+  .btn:active{transform:scale(.98);}
+  .btn-download{background:linear-gradient(135deg,#ff7e5f,#ff5e62);color:#fff;box-shadow:0 6px 18px rgba(255,94,98,.4);}
+  .btn-site{background:#eef2ff;color:#2a5298;border:1px solid #d6e0ff;}
+  .shared-by{font-size:14px;color:#666;background:#f5f7ff;padding:10px 14px;border-radius:10px;display:inline-block;}
+  .shared-by b{color:#1e3c72;}
+  .file-info{margin-top:20px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
+  .fi-icon{font-size:60px;}
+  .fi-name{font-size:20px;font-weight:700;word-break:break-all;}
+  .fi-meta{font-size:13px;color:#888;}
+  .file-list{margin-top:14px;width:100%;display:flex;flex-direction:column;gap:8px;max-height:200px;overflow:auto;}
+  .file-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f7f9ff;padding:10px 12px;border-radius:10px;}
+  .file-row .fr-name{font-size:14px;word-break:break-all;}
+  .file-row a{flex:none;color:#fff;background:#2a5298;padding:6px 12px;border-radius:8px;text-decoration:none;font-size:13px;}
+  .err{color:#e74c3c;font-size:14px;}
+  @media(max-width:640px){.share-wrap{flex-direction:column;}.box-left,.box-right{min-height:auto;}}
+</style>
+</head>
+<body>
+<div class="share-wrap">
+  <!-- 左：店名 + 底部按钮 -->
+  <div class="box box-left">
+    <div>
+      <div class="shop-logo">🏪</div>
+      <div class="shop-name" id="shopName">Vojing 网盘</div>
+      <div class="shop-sub">FILE SHARE</div>
+    </div>
+    <div class="left-actions">
+      <a class="btn btn-download" id="dlBtn" href="#" download>⬇ 下载</a>
+      <a class="btn btn-site" id="siteBtn" href="https://vojingx.github.io" target="_blank" rel="noopener">🌐 进入官网</a>
+    </div>
+  </div>
+  <!-- 右：分享者 + 文件信息 -->
+  <div class="box box-right">
+    <div class="shared-by" id="sharedBy">由 <b>未知用户</b> 分享</div>
+    <div class="file-info" id="fileInfo"><p>加载中…</p></div>
+  </div>
+</div>
+
+<script>
+const OWNER='vojingx', REPO='vojingx.github.io', BRANCH='main';
+const API_BASE=`https://api.github.com/repos/${OWNER}/${REPO}`;
+/* ===== 你随时可以改这两行 ===== */
+const SHOP_NAME='Vojing 网盘';          // 左边方框显示的店名
+const SITE_URL='https://vojingx.github.io'; // “进入官网”指向的地址
+/* ============================== */
+
+document.getElementById('shopName').textContent=SHOP_NAME;
+document.getElementById('siteBtn').href=SITE_URL;
+
+const params=new URLSearchParams(location.search);
+const file=params.get('file');
+const folder=params.get('folder');
+
+function encPath(p){return p.split('/').map(encodeURIComponent).join('/');}
+function sharerOf(path){const m=String(path).match(/^Cloud\/([^\/]+)/);return m?m[1]:'未知用户';}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function formatSize(b){if(!b||b===0)return'0 B';const u=['B','KB','MB','GB','TB'];const i=Math.floor(Math.log(b)/Math.pow(1024,i));return(b/Math.pow(1024,i)).toFixed(1)+' '+u[i];}
+function rawUrl(p){return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encPath(p)}`;}
+
+async function init(){
+  const info=document.getElementById('fileInfo');
+  const dl=document.getElementById('dlBtn');
+  if(folder){
+    document.getElementById('sharedBy').innerHTML='由 <b>'+esc(sharerOf(folder))+'</b> 分享';
+    const name=folder.split('/').pop();
+    info.innerHTML=`<div class="fi-icon">📁</div><div class="fi-name">${esc(name)}</div><div class="fi-meta">文件夹（以下文件可直接下载，无需登录）</div>`;
+    // 文件夹无法单个下载：左按钮改为“查看文件”滚动到列表
+    dl.textContent='📂 查看文件';
+    dl.removeAttribute('download');
+    dl.onclick=()=>document.getElementById('fileList').scrollIntoView({behavior:'smooth'});
+    await listFolder(folder,info);
+  }else if(file){
+    document.getElementById('sharedBy').innerHTML='由 <b>'+esc(sharerOf(file))+'</b> 分享';
+    const name=file.split('/').pop();
+    let size='';
+    try{
+      const r=await fetch(`${API_BASE}/contents/${encPath(file)}?ref=${BRANCH}`);
+      if(r.ok){const d=await r.json(); if(d.size)size=formatSize(d.size);}
+    }catch(e){}
+    info.innerHTML=`<div class="fi-icon">📄</div><div class="fi-name">${esc(name)}</div><div class="fi-meta">${size?('大小: '+size):'文件'}</div>`;
+    dl.href=rawUrl(file);
+    dl.setAttribute('download','');
+  }else{
+    document.getElementById('sharedBy').textContent='';
+    info.innerHTML='<p class="err">链接不完整，无法识别要分享的内容。</p>';
+    dl.style.display='none';
+  }
+}
+async function listFolder(path,info){
+  try{
+    const r=await fetch(`${API_BASE}/contents/${encPath(path)}?ref=${BRANCH}`);
+    if(!r.ok)throw new Error('list failed');
+    const d=await r.json();
+    const arr=Array.isArray(d)?d:[d];
+    const files=arr.filter(f=>f.type==='file'&&!f.name.startsWith('_'));
+    if(files.length===0){info.innerHTML+='<p class="fi-meta" style="margin-top:10px">（空文件夹）</p>';return;}
+    let html='<div class="file-list" id="fileList">';
+    files.forEach(f=>{
+      html+=`<div class="file-row"><span class="fr-name">${esc(f.name)}</span><a href="${rawUrl(f.path)}" download>下载</a></div>`;
+    });
+    html+='</div>';
+    info.innerHTML+=html;
+  }catch(e){
+    info.innerHTML+='<p class="err" style="margin-top:10px">文件夹列表加载失败，请稍后重试。</p>';
+  }
+}
+init();
+</script>
+</body>
+</html>
