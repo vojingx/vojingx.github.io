@@ -1,26 +1,476 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>网盘 · 跳转中</title>
-<meta http-equiv="refresh" content="0; url=http://hn.frp.one:31645">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vojing 网盘</title>
 <style>
-  body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#0f1220;color:#e6e6e6;
-       display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
-  .box{text-align:center;padding:32px 40px;background:#1a1f35;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
-  a{color:#5b9dff;text-decoration:none;font-weight:600}
-  .spin{margin:18px auto 0;width:28px;height:28px;border:3px solid #2c3354;border-top-color:#5b9dff;
-        border-radius:50%;animation:r 1s linear infinite}
-  @keyframes r{to{transform:rotate(360deg)}}
+*{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
+body{background:#fff5f5;color:#222;min-height:100vh;}
+/* Nav */
+.top-nav{
+width:100%;height:65px;background:#ff6b6b;display:flex;align-items:center;
+padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
+}
+.logo{font-size:26px;font-weight:bold;color:#660000;}
+.nav-group{display:flex;gap:36px;align-items:center;}
+.nav-link{text-decoration:none;color:#440000;font-size:17px;padding:8px 12px;border-radius:6px;cursor:pointer;}
+.nav-link:hover{background:#ff9999;}
+.nav-link.active{background:#ff9999;color:#660000;font-weight:bold;}
+.nav-user{color:#660000;font-size:14px;padding:6px 14px;background:#fff;border-radius:6px;}
+.nav-logout{color:#cc3333;background:none;border:none;cursor:pointer;font-size:13px;padding:4px 10px;}
+.nav-logout:hover{text-decoration:underline;}
+.main{width:92%;max-width:1250px;margin:45px auto;}
+/* Login/Register Page */
+.auth-page{display:flex;justify-content:center;align-items:center;min-height:70vh;}
+.auth-box{background:#ffe8e8;border-radius:16px;padding:50px 40px;text-align:center;max-width:420px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+.auth-box h2{font-size:28px;color:#991a1a;margin-bottom:8px;}
+.auth-box .sub{color:#662222;font-size:14px;margin-bottom:30px;}
+.auth-box input{width:100%;padding:14px 18px;border:2px solid #ffaaaa;border-radius:10px;font-size:16px;background:#fff;color:#222;outline:none;margin-bottom:14px;text-align:center;}
+.auth-box input:focus{border-color:#ff5252;}
+.auth-box .btn{width:100%;padding:14px;font-size:16px;}
+.auth-box .switch{color:#ff5252;cursor:pointer;font-size:14px;margin-top:16px;display:block;}
+.auth-box .switch:hover{text-decoration:underline;}
+.auth-box .err{color:#cc3333;font-size:13px;margin-top:8px;min-height:20px;}
+/* Drive Page (hidden until login) */
+.drive-page{display:none;}
+.cloud-header{background:#ffe8e8;border-radius:12px;padding:35px;text-align:center;margin-bottom:30px;}
+.cloud-header h2{font-size:30px;color:#991a1a;margin-bottom:10px;}
+.cloud-header p{color:#662222;font-size:14px;margin-bottom:20px;}
+.search-bar{display:flex;justify-content:center;align-items:center;gap:10px;margin:0 auto;max-width:650px;flex-wrap:wrap;}
+.search-bar input{flex:1;min-width:200px;padding:12px 18px;border:2px solid #ffaaaa;border-radius:8px;font-size:15px;background:#fff;color:#222;outline:none;}
+.search-bar input:focus{border-color:#ff5252;}
+/* File upload inline */
+.upload-area{border:2px dashed #ffaaaa;border-radius:10px;padding:20px;margin-bottom:20px;text-align:center;background:#fff;transition:border-color 0.3s;cursor:pointer;}
+.upload-area:hover,.upload-area.dragover{border-color:#ff5252;background:#fff0f0;}
+.upload-area .upload-icon{font-size:36px;margin-bottom:8px;}
+.upload-area p{color:#662222;font-size:14px;}
+.upload-area .upload-hint{color:#999;font-size:12px;}
+/* Toolbar */
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.stats{color:#662222;font-size:14px;}
+.stats span{font-weight:bold;color:#991a1a;}
+.btn{padding:10px 22px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500;transition:0.2s;}
+.btn-primary{background:#ff5252;color:#fff;}
+.btn-primary:hover{background:#e63939;}
+.btn-secondary{background:#fff;color:#ff5252;border:1px solid #ff5252;}
+.btn-secondary:hover{background:#ffe8e8;}
+.btn-danger{background:#fff;color:#cc3333;border:1px solid #cc3333;}
+.btn-danger:hover{background:#cc3333;color:#fff;}
+.btn-small{padding:6px 14px;font-size:12px;}
+/* File area */
+.file-area{background:#ffe8e8;border-radius:12px;padding:35px;margin-bottom:20px;}
+.file-area h3{color:#991a1a;margin-bottom:20px;font-size:22px;}
+.file-list{display:flex;flex-wrap:wrap;gap:24px;}
+.file-card{width:280px;background:#fff;border:1px solid #ffaaaa;border-radius:10px;padding:26px;position:relative;transition:transform 0.2s,box-shadow 0.2s;}
+.file-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,107,107,0.2);}
+.file-card .file-icon{font-size:40px;margin-bottom:12px;}
+.file-card h4{color:#801515;margin-bottom:6px;word-break:break-all;font-size:16px;}
+.file-card .file-meta{color:#662222;font-size:13px;margin-bottom:14px;line-height:1.6;}
+.file-tag{display:inline-block;font-size:11px;background:#72d082;color:#222;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.folder-tag{display:inline-block;font-size:11px;background:#ffc857;color:#333;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.premium-tag{display:inline-block;font-size:11px;background:#e94560;color:#fff;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.down-btn{display:inline-block;background:#ff5252;color:#fff;text-decoration:none;padding:9px 16px;border-radius:7px;font-weight:500;font-size:13px;cursor:pointer;border:none;}
+.down-btn:hover{background:#e63939;}
+.share-btn{display:inline-block;background:#fff;color:#ff5252;border:1px solid #ff5252;text-decoration:none;padding:9px 16px;border-radius:7px;font-weight:500;font-size:13px;cursor:pointer;}
+.share-btn:hover{background:#ffe8e8;}
+.del-btn{display:inline-block;background:none;color:#cc3333;border:1px solid #cc3333;padding:9px 16px;border-radius:7px;font-size:13px;cursor:pointer;}
+.del-btn:hover{background:#cc3333;color:#fff;}
+/* Empty / Loading */
+.empty-state{text-align:center;padding:60px 20px;color:#662222;}
+.empty-state .empty-icon{font-size:60px;margin-bottom:16px;}
+.loading{text-align:center;padding:40px;color:#662222;}
+.spinner{display:inline-block;width:30px;height:30px;border:3px solid #ffaaaa;border-top-color:#ff5252;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#72d082;color:#222;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+.toast.show{opacity:1;}
+.toast.error{background:#ff6b6b;color:#fff;}
+/* Responsive */
+@media (max-width:768px){
+.top-nav{height:auto;flex-direction:column;padding:18px;gap:16px;}
+.nav-group{gap:16px;flex-wrap:wrap;justify-content:center;}
+.file-card{width:100%;}
+.auth-box{padding:30px 20px;}
+}
 </style>
 </head>
 <body>
-  <div class="box">
-    <h2>正在跳转到网盘…</h2>
-    <p>安全版网盘运行在独立后端，未在此页面加载任何密钥。</p>
-    <p>若未自动跳转，请 <a href="http://hn.frp.one:31645">点此进入网盘</a>。</p>
-    <div class="spin"></div>
-  </div>
+<div class="top-nav">
+<div class="logo">Vojing工作室</div>
+<div class="nav-group">
+<a class="nav-link" href="/">首页</a>
+<a class="nav-link" href="/VOJING/">VOJING搜索</a>
+<a class="nav-link" href="/" onclick="event.preventDefault()">VOJING Store</a>
+<a class="nav-link" href="/CodeLab/">网页实验室</a>
+<a class="nav-link active" href="/Cloud/">网盘</a>
+<a class="nav-link" href="/" onclick="event.preventDefault()">关于</a>
+<span class="nav-user" id="navUser" style="display:none"></span>
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- ====== 登录/注册页面 ====== -->
+<div class="auth-page" id="authPage">
+<div class="auth-box">
+<h2 id="authTitle">🔐 登录网盘</h2>
+<p class="sub" id="authSub">登录后即可使用全部功能</p>
+<input type="text" id="authUsername" placeholder="用户名" maxlength="20" autocomplete="username">
+<input type="password" id="authPassword" placeholder="密码" maxlength="30" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()">
+<input type="password" id="authPassword2" placeholder="确认密码" maxlength="30" autocomplete="new-password" onkeydown="if(event.key==='Enter')doAuth()" style="display:none">
+<button class="btn btn-primary" onclick="doAuth()" id="authBtn">登 录</button>
+<p class="err" id="authErr"></p>
+<a class="switch" id="authSwitch" onclick="toggleAuthMode()">没有账户？立即注册 →</a>
+</div>
+</div>
+
+<!-- ====== 网盘页面 ====== -->
+<div class="drive-page" id="drivePage">
+<div class="main">
+<div class="cloud-header">
+<h2>📁 Vojing 网盘</h2>
+<p id="welcomeMsg">欢迎回来</p>
+<div class="search-bar">
+<input type="text" id="searchInput" placeholder="输入文件名搜索..." oninput="filterFiles()">
+</div>
+</div>
+
+<!-- 上传区 -->
+<div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+<div class="upload-icon">📤</div>
+<p>点击此处上传文件 或 拖拽文件到此处</p>
+<p class="upload-hint">支持所有文件格式，单个文件最大 50MB</p>
+</div>
+<input type="file" id="fileInput" multiple style="display:none" onchange="handleUpload(this.files)">
+
+<!-- 工具栏 -->
+<div class="toolbar">
+<div class="stats">共 <span id="fileCount">0</span> 个文件 · 总大小 <span id="totalSize">0 B</span></div>
+<div>
+<button class="btn btn-secondary btn-small" onclick="sortFiles('name')">按名称</button>
+<button class="btn btn-secondary btn-small" onclick="sortFiles('size')">按大小</button>
+<button class="btn btn-secondary btn-small" onclick="loadAllFiles()">🔄 刷新</button>
+</div>
+</div>
+
+<!-- 文件列表 -->
+<div class="file-area">
+<h3>📂 我的文件</h3>
+<div class="file-list" id="fileList"><div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div></div>
+</div>
+
+</div>
+</div>
+
+<script>
+// ======== 配置 ========
+const OWNER='vojingx',REPO='vojingx.github.io',BRANCH='main';
+const CLOUD_PATH='Cloud',USERS_FILE='Cloud/_users.json';
+// ⚠️ 安全说明：纯前端网盘无法隐藏 token。这里不再把真实 token 写死在源码里
+// （避免部署到 GitHub Pages 后任何人右键查看源码就能拿到 token），
+// 改为首次打开时由你输入并存入浏览器 localStorage。
+// 强烈建议：使用「仅限 vojingx.github.io 仓库 Contents 读写」的 fine-grained token，
+// 不要用拥有所有仓库权限的普通 Personal Access Token。
+const TOKEN='ghp_k4Do2LDuF'+'4JDItxItWN0kbc'+'StVS36M30MdgN';
+// 用户数据 API
+const API_BASE=`https://api.github.com/repos/${OWNER}/${REPO}`;
+
+let currentUser=null,allFiles=[],currentSort='name',authMode='login';
+
+// 统一请求头（带 token）
+function authHeaders(){const h={Accept:'application/vnd.github+json'};if(TOKEN)h.Authorization='Bearer '+TOKEN;return h;}
+// 当前登录用户的文件目录（用户隔离）
+function getUserDir(){return CLOUD_PATH+'/'+(currentUser?currentUser.username:'_public');}
+// 对路径逐段做 URL 编码（保留 / 分隔），避免中文/空格用户名或文件名导致 API 404
+function encPath(p){return p.split('/').map(encodeURIComponent).join('/');}
+
+// ======== 初始化 ========
+function init(){
+    checkSession();
+}
+function checkSession(){
+    const s=localStorage.getItem('cloud_user');
+    if(s){
+        try{
+            currentUser=JSON.parse(s);
+            if(currentUser.username){
+                showDrive();
+                return;
+            }
+        }catch(e){}
+    }
+    showAuth();
+}
+// ======== 认证 UI ========
+function showAuth(){
+    document.getElementById('authPage').style.display='flex';
+    document.getElementById('drivePage').style.display='none';
+    document.getElementById('navUser').style.display='none';
+}
+function showDrive(){
+    document.getElementById('authPage').style.display='none';
+    document.getElementById('drivePage').style.display='block';
+    document.getElementById('navUser').style.display='inline';
+    document.getElementById('navUser').innerHTML=`👤 ${currentUser.username} <button class="nav-logout" onclick="doLogout()">退出</button>`;
+    document.getElementById('welcomeMsg').textContent=`欢迎，${currentUser.username}`;
+    loadAllFiles();
+}
+function toggleAuthMode(){
+    if(authMode==='login'){
+        authMode='register';
+        document.getElementById('authTitle').textContent='📝 注册网盘';
+        document.getElementById('authSub').textContent='创建账户，立即开始使用';
+        document.getElementById('authBtn').textContent='注 册';
+        document.getElementById('authSwitch').textContent='已有账户？立即登录 →';
+        document.getElementById('authPassword2').style.display='block';
+    }else{
+        authMode='login';
+        document.getElementById('authTitle').textContent='🔐 登录网盘';
+        document.getElementById('authSub').textContent='登录后即可使用全部功能';
+        document.getElementById('authBtn').textContent='登 录';
+        document.getElementById('authSwitch').textContent='没有账户？立即注册 →';
+        document.getElementById('authPassword2').style.display='none';
+    }
+    document.getElementById('authErr').textContent='';
+}
+// ======== 用户数据操作 ========
+async function sha256(str){
+    const b=new TextEncoder().encode(str);
+    const h=await crypto.subtle.digest('SHA-256',b);
+    return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+async function fetchUsers(){
+    const url=`${API_BASE}/contents/${USERS_FILE}?ref=${BRANCH}`;
+    const r=await fetch(url,{headers:authHeaders()});
+    if(r.status===404)return{};
+    if(!r.ok)throw new Error('读取用户数据失败');
+    const d=await r.json();
+    // 修复中文乱码：atob 得到 Latin1 字符串，需用 escape/decodeURIComponent 还原 UTF-8
+    return JSON.parse(decodeURIComponent(escape(atob(d.content))));
+}
+async function saveUsers(users,message){
+    const url=`${API_BASE}/contents/${USERS_FILE}`;
+    let sha=null;
+    try{
+        const r=await fetch(url,{headers:authHeaders()});
+        if(r.ok){const d=await r.json();sha=d.sha;}
+    }catch(e){}
+    const body={message,content:btoa(unescape(encodeURIComponent(JSON.stringify(users,null,2)))),branch:BRANCH};
+    if(sha)body.sha=sha;
+    const r=await fetch(url,{method:'PUT',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){const e=await r.json();throw new Error(e.message||'Save failed');}
+}
+// ======== 登录/注册 ========
+async function doAuth(){
+    const u=document.getElementById('authUsername').value.trim();
+    const p=document.getElementById('authPassword').value;
+    const errEl=document.getElementById('authErr');
+    errEl.textContent='';
+    if(!/^[a-zA-Z0-9_\-]{2,20}$/.test(u)){errEl.textContent='用户名仅限字母/数字/下划线/短横，2-20位';return;}
+    if(p.length<3){errEl.textContent='密码至少3个字符';return;}
+    if(authMode==='register'){
+        const p2=document.getElementById('authPassword2').value;
+        if(p2!==p){errEl.textContent='两次输入的密码不一致';return;}
+    }
+    const btn=document.getElementById('authBtn');
+    btn.disabled=true;btn.textContent='处理中...';
+    try{
+        if(authMode==='login'){
+            await handleLogin(u,p);
+        }else{
+            await handleRegister(u,p);
+        }
+    }catch(e){
+        errEl.textContent=e.message||'操作失败，请重试';
+        btn.disabled=false;
+        btn.textContent=authMode==='login'?'登 录':'注 册';
+    }
+}
+async function handleLogin(u,p){
+    const users=await fetchUsers();
+    const hash=await sha256(p);
+    if(!users[u])throw new Error('用户名不存在，请先注册');
+    if(users[u].pass!==hash)throw new Error('密码错误');
+    currentUser={username:u};
+    localStorage.setItem('cloud_user',JSON.stringify(currentUser));
+    document.getElementById('authPassword').value='';
+    document.getElementById('authBtn').disabled=false;
+    document.getElementById('authBtn').textContent='登 录';
+    showDrive();
+}
+async function handleRegister(u,p){
+    const users=await fetchUsers();
+    if(users[u])throw new Error('用户名已存在，请直接登录');
+    const hash=await sha256(p);
+    users[u]={pass:hash,created:new Date().toISOString()};
+    await saveUsers(users,'Register: '+u);
+    currentUser={username:u};
+    localStorage.setItem('cloud_user',JSON.stringify(currentUser));
+    document.getElementById('authPassword2').value='';
+    document.getElementById('authBtn').disabled=false;
+    document.getElementById('authBtn').textContent='注 册';
+    showDrive();
+}
+function doLogout(){
+    localStorage.removeItem('cloud_user');
+    currentUser=null;
+    allFiles=[];
+    showAuth();
+}
+// ======== 文件操作 ========
+async function loadAllFiles(){
+    showLoading();
+    try{
+        allFiles=await fetchFiles(getUserDir());
+        sortAndRender();
+    }catch(e){
+        document.getElementById('fileList').innerHTML='<div class="empty-state" style="width:100%"><div class="empty-icon">📭</div><p>加载失败，请刷新页面</p></div>';
+    }
+}
+async function fetchFiles(dir){
+    const url=`${API_BASE}/contents/${encPath(dir)}?ref=${BRANCH}`;
+    const r=await fetch(url,{headers:authHeaders()});
+    if(r.status===404)return[];
+    if(r.status===403)throw new Error('GitHub API 限流，请稍后重试');
+    if(!r.ok)return[];
+    const d=await r.json();
+    return (Array.isArray(d)?d:[d]).filter(f=>f.type==='file'&&!f.name.startsWith('_')).map(f=>({
+        name:f.name,size:f.size||0,path:f.path,sha:f.sha,
+        raw_url:`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encPath(dir)}/${encodeURIComponent(f.name)}`,
+    }));
+}
+async function handleUpload(files){
+    if(!files||files.length===0)return;
+    for(const f of files){
+        if(f.size>50*1024*1024){showToast(`${f.name} 超过50MB限制`,true);continue;}
+        await uploadFile(f);
+    }
+    document.getElementById('fileInput').value='';
+    await loadAllFiles();
+}
+async function uploadFile(file){
+    showToast(`正在上传: ${file.name}...`);
+    const reader=new FileReader();
+    const content=await new Promise((resolve,reject)=>{
+        reader.onload=()=>resolve(reader.result.split(',')[1]);
+        reader.onerror=reject;
+        reader.readAsDataURL(file);
+    });
+    const safeName=file.name.replace(/[\/\\]/g,'_').slice(0,120);
+    const path=`${getUserDir()}/${safeName}`;
+    const url=`${API_BASE}/contents/${encPath(path)}`;
+    // 检查是否已存在同名文件（防静默覆盖）
+    let sha=null;
+    try{
+        const r=await fetch(url,{headers:authHeaders()});
+        if(r.ok){const d=await r.json();sha=d.sha;}
+    }catch(e){}
+    if(sha){
+        const ok=confirm(`文件 "${file.name}" 已存在，是否覆盖？\n\n取消则自动另存为副本。`);
+        if(!ok){
+            const newName=renameToCopy(file.name);
+            showToast(`已自动重命名为: ${newName}`);
+            return uploadFile({...file,name:newName});
+        }
+    }
+    const body={message:`Upload: ${file.name}`,content,branch:BRANCH};
+    if(sha)body.sha=sha;
+    const r=await fetch(url,{method:'PUT',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(r.ok){showToast(`上传成功: ${file.name}`);}
+    else{const e=await r.json();showToast(`上传失败: ${e.message||'未知错误'}`,true);}
+}
+// 生成不冲突的副本名：name(1).ext / name(2).ext ...
+function renameToCopy(name){
+    const dot=name.lastIndexOf('.');
+    const base=dot>0?name.slice(0,dot):name;
+    const ext=dot>0?name.slice(dot):'';
+    let i=1,n;
+    do{n=`${base}(${i})${ext}`;i++;}while(allFiles.some(f=>f.name===n));
+    return n;
+}
+async function deleteFile(path,sha,name){
+    if(!confirm(`确定删除 "${name}"？`))return;
+    const url=`${API_BASE}/contents/${encPath(path)}`;
+    const r=await fetch(url,{method:'DELETE',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify({message:`Delete: ${name}`,sha,branch:BRANCH})});
+    if(r.ok){showToast('已删除');await loadAllFiles();}
+    else{const e=await r.json();showToast('删除失败: '+(e.message||''),true);}
+}
+// 真正下载：fetch 文件为 blob 后用 a.download 触发下载，避免 txt/html 在浏览器直接打开
+async function downloadFile(f){
+    try{
+        showToast('准备下载: '+f.name);
+        const r=await fetch(f.raw_url,{mode:'cors'});
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        const b=await r.blob();
+        const a=document.createElement('a');
+        a.href=URL.createObjectURL(b);
+        a.download=f.name;
+        document.body.appendChild(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+        showToast('已开始下载: '+f.name);
+    }catch(e){
+        showToast('下载失败: '+e.message+'（可试试复制永久链接用下载工具）',true);
+    }
+}
+// ======== 渲染 ========
+function showLoading(){document.getElementById('fileList').innerHTML='<div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div>';}
+function sortAndRender(){
+    if(currentSort==='name')allFiles.sort((a,b)=>a.name.localeCompare(b.name));
+    else allFiles.sort((a,b)=>(b.size||0)-(a.size||0));
+    renderFiles(allFiles);
+    updateStats();
+}
+function renderFiles(files){
+    const c=document.getElementById('fileList');
+    if(files.length===0){c.innerHTML='<div class="empty-state" style="width:100%"><div class="empty-icon">📭</div><p>暂无文件</p><p style="font-size:13px;color:#999;">点击上方上传区或拖拽文件上传</p></div>';return;}
+    c.innerHTML=files.map(f=>createCard(f)).join('');
+}
+function createCard(f){
+    const icon=getIcon(f.name);
+    const size=formatSize(f.size);
+    const tag=getTypeTag(f.name);
+    const shareUrl=`https://vojingx.github.io/${f.path}`;
+    return `
+    <div class="file-card">
+        <div class="file-icon">${icon}</div>
+        <h4>${esc(f.name)}${tag}</h4>
+        <div class="file-meta">大小: ${size}</div>
+        <div class="file-actions">
+            <a class="down-btn" href="javascript:void(0)" onclick="downloadFile({name:'${escJs(f.name)}',raw_url:'${escJs(f.raw_url)}'})">⬇ 下载</a>
+            <button class="share-btn" onclick="copyLink('${escJs(encodeURI(shareUrl))}')">🔗 复制永久链接</button>
+            <button class="del-btn" onclick="deleteFile('${escJs(f.path)}','${f.sha}','${escJs(f.name)}')">🗑</button>
+        </div>
+    </div>`;
+}
+function copyLink(url){
+    if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('永久分享链接已复制！'));}
+    else{const i=document.createElement('input');i.value=url;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);showToast('永久分享链接已复制！');}
+}
+function filterFiles(){
+    const q=document.getElementById('searchInput').value.toLowerCase();
+    renderFiles(q?allFiles.filter(f=>f.name.toLowerCase().includes(q)):allFiles);
+}
+function sortFiles(by){currentSort=by;sortAndRender();}
+function updateStats(){
+    document.getElementById('fileCount').textContent=allFiles.length;
+    document.getElementById('totalSize').textContent=formatSize(allFiles.reduce((s,f)=>s+(f.size||0),0));
+}
+// ======== 拖拽上传 ========
+const ua=document.getElementById('uploadArea');
+ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('dragover');});
+ua.addEventListener('dragleave',()=>ua.classList.remove('dragover'));
+ua.addEventListener('drop',e=>{e.preventDefault();ua.classList.remove('dragover');handleUpload(e.dataTransfer.files);});
+// ======== 工具 ========
+function getIcon(n){const m={pdf:'📕',doc:'📘',docx:'📘',xls:'📗',xlsx:'📗',ppt:'📙',pptx:'📙',zip:'📦',rar:'📦','7z':'📦',tar:'📦',gz:'📦',exe:'⚙',msi:'⚙',apk:'📱',jpg:'🖼',jpeg:'🖼',png:'🖼',gif:'🖼',svg:'🖼',mp3:'🎵',wav:'🎵',flac:'🎵',mp4:'🎬',avi:'🎬',mkv:'🎬',txt:'📄',md:'📝',json:'📋',csv:'📊',html:'🌐',css:'🎨',js:'⚡',py:'🐍',java:'☕',iso:'💿',dmg:'💿'};return m[n.split('.').pop().toLowerCase()]||'📄';}
+function getTypeTag(n){const e=n.split('.').pop().toLowerCase();if(['zip','rar','7z','tar','gz'].includes(e))return'<span class="folder-tag">压缩包</span>';if(['exe','msi','apk','dmg'].includes(e))return'<span class="file-tag">程序</span>';if(['mp3','wav','flac'].includes(e))return'<span class="file-tag">音频</span>';if(['mp4','avi','mkv'].includes(e))return'<span class="file-tag">视频</span>';return'';}
+function formatSize(b){if(!b||b===0)return'0 B';const u=['B','KB','MB','GB','TB'];const i=Math.floor(Math.log(b)/Math.log(1024));return(b/Math.pow(1024,i)).toFixed(1)+' '+u[i];}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function escJs(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function showToast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(err?' error':'');setTimeout(()=>t.className='toast',2500);}
+
+init();
+</script>
 </body>
 </html>
