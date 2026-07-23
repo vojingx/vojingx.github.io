@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "name": "OmniAI Studio",
+  "changelog": "初始版本：本地聊天 + AI 游戏（井字棋 / 五子棋），对话出图（免费通道）。",
+  "download_page": "https://vojingx.github.io/omni-ai.html#download",
+  "download_portable": "https://vojingx.github.io/App/OmniAI-Portable.exe",
+  "download_setup": "https://vojingx.github.io/App/OmniAI-Setup.exe",
+  "mandatory": false,
+  "published_at": "2026-07-22"
+}
