@@ -1,10 +1,10 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "name": "OmniAI Studio",
-  "changelog": "新增：长期记忆、资讯查询(RSS免费)、AI视频(文字转GIF)、内置自动更新检查；聊天支持一键清空。",
+  "changelog": "新增 6 个可选大模型（Qwen3-4B/8B、DeepSeek-R1 推理 1.5B/7B、Qwen2.5-0.5B、Coder-3B），新增「导入本地模型」按钮，可直接导入本机 .gguf 模型文件",
   "download_page": "https://vojingx.github.io/omni-ai.html#download",
   "download_portable": "https://vojingx.github.io/App/OmniAI-Portable.exe",
   "download_setup": "https://vojingx.github.io/App/OmniAI-Setup.exe",
   "mandatory": false,
-  "published_at": "2026-07-23"
+  "published_at": "2026-07-24"
 }
