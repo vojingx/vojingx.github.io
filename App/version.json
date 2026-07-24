@@ -1,10 +1,14 @@
 {
-  "version": "1.3.2",
+  "version": "1.3.3",
   "name": "OmniAI Studio",
-  "changelog": "下载加速：新增 8 条国内镜像线路（ghfast/gh-proxy/ghproxy.net 等），所有加速镜像不可用时自动回退 GitHub 官方源，不再直接报下载失败。",
+  "changelog": "修复更新后启动报「Failed to load Python DLL」的问题：强制打包 python313.dll/python3.dll 并排除 UPX 压缩，避免杀毒软件误删；更新器新增 SHA256/文件大小完整性校验，下载损坏自动重试。",
   "download_page": "https://vojingx.github.io/omni-ai.html#download",
   "download_portable": "https://vojingx.github.io/App/OmniAI-Portable.exe",
   "download_setup": "https://vojingx.github.io/App/OmniAI-Setup.exe",
   "mandatory": false,
-  "published_at": "2026-07-24"
+  "published_at": "2026-07-24",
+  "portable_sha256": "9806ae9e6d48e1112f1b3656eabfd4a2d7534f11bbe85a95e0d6b2791c4cbf9b",
+  "portable_size": 36641572,
+  "setup_sha256": "c7b549a527276d3bcd44b93ac8c6b3f0ddf6e57f4c669ea98d2e1f6f4bdbcfea",
+  "setup_size": 12022317
 }
