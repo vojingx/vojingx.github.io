@@ -1,14 +1,14 @@
 {
-  "version": "2.2.0",
+  "version": "1.3.2",
   "name": "OmniAI Studio",
-  "changelog": "OmniAI Studio 2.2.0：新增文本框右键「复制 / 粘贴」菜单；修复若干体验问题；整体稳定性优化。标准版免密钥，下载即用。",
+  "changelog": "OmniAI Studio 1.3.2：8 条国内镜像线路，加速镜像全挂时自动回退 GitHub 官方源。",
   "download_page": "https://vojingx.github.io/omni-ai.html#download",
-  "download_portable": "https://vojingx.github.io/App/OmniAI-Portable.exe",
-  "download_setup": "https://vojingx.github.io/App/OmniAI-Setup.exe",
+  "download_portable": "https://vojingx.github.io/App/OmniAI-1.3.2-Portable.exe",
+  "download_setup": "https://vojingx.github.io/App/OmniAI-1.3.2-Portable.exe",
   "mandatory": false,
   "published_at": "2026-07-25",
-  "portable_sha256": "c4bf082a18f706d2f848ecd7b82942f36eafc9f83feadba386a3672611c42486",
-  "portable_size": 30320572,
-  "setup_sha256": "da001d9e98c562bc6b8084d3823a53f1dac727a111ae9a96384925b7282767d5",
-  "setup_size": 12024535
+  "portable_sha256": null,
+  "portable_size": null,
+  "setup_sha256": null,
+  "setup_size": null
 }
