@@ -1,14 +1,14 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "name": "OmniAI Studio",
-  "changelog": "OmniAI 专业版 PRO Max Ultra（2.0.0）：重命名专业版，启动需产品密钥激活（仅一次）；聊天/记忆/资讯/AI视频 三合一整合进统一工作台，AI 游戏移至聊天界面右侧常驻；默认引擎升级为 Qwen3-8B；修复 local 聊天 memory_prompt 调用 bug。",
+  "changelog": "OmniAI Studio 2.1.0：本地模型清单扩充并清理——现 17 个本地免费模型（全部 ≤5.5GB、经实测可下、无死链）；新增 Llama-3.2/3.1、Phi-3-mini、DeepSeek-R1(Llama)-8B、Qwen2.5-Coder-1.5B/0.5B 等小模型；移除 3 个 200GB 级超大模型（含 Seed-OSS-36B/豆包）。",
   "download_page": "https://vojingx.github.io/omni-ai.html#download",
   "download_portable": "https://vojingx.github.io/App/OmniAI-Portable.exe",
   "download_setup": "https://vojingx.github.io/App/OmniAI-Setup.exe",
   "mandatory": false,
   "published_at": "2026-07-25",
-  "portable_sha256": "c7c2dd2e50952c9a9ca4e3c65e5ffd72877b464c982c4c5bd3b03470cc4e93a1",
-  "portable_size": 36649429,
-  "setup_sha256": "d1e5459a00e837025450dbc4d3b5a93f8edffd55707fbfa58db340d9ae8e6237",
-  "setup_size": 12022317
+  "portable_sha256": "533a34e081c3dd87c281711f211440c1ae5ff09dcbef4ffb6a20d4bd78285348",
+  "portable_size": 36646534,
+  "setup_sha256": "0461e8690da780e9b40d2624f5d0066910a1bccddf942238a0d08b04bd4c2f73",
+  "setup_size": 12021509
 }
