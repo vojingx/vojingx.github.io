@@ -1,14 +1,14 @@
 {
   "version": "2.2.0",
   "name": "OmniAI Studio",
-  "changelog": "OmniAI Studio 2.1.0：本地模型清单扩充并清理——现 17 个本地免费模型（全部 ≤5.5GB、经实测可下、无死链）；新增 Llama-3.2/3.1、Phi-3-mini、DeepSeek-R1(Llama)-8B、Qwen2.5-Coder-1.5B/0.5B 等小模型；移除 3 个 200GB 级超大模型（含 Seed-OSS-36B/豆包）。",
+  "changelog": "OmniAI Studio 2.2.0：新增文本框右键「复制 / 粘贴」菜单；修复若干体验问题；整体稳定性优化。标准版免密钥，下载即用。",
   "download_page": "https://vojingx.github.io/omni-ai.html#download",
   "download_portable": "https://vojingx.github.io/App/OmniAI-Portable.exe",
   "download_setup": "https://vojingx.github.io/App/OmniAI-Setup.exe",
   "mandatory": false,
   "published_at": "2026-07-25",
-  "portable_sha256": "fdb41463e378dc2f7d952e8d44fc694c0e4223db4629bfeffa9922899586dec9",
-  "portable_size": 36651005,
-  "setup_sha256": "bafe7c7cfb451b4b51d8867e68e70c91a47c8954ed8d1bf68405bd2781725499",
-  "setup_size": 12024512
+  "portable_sha256": "c4bf082a18f706d2f848ecd7b82942f36eafc9f83feadba386a3672611c42486",
+  "portable_size": 30320572,
+  "setup_sha256": "da001d9e98c562bc6b8084d3823a53f1dac727a111ae9a96384925b7282767d5",
+  "setup_size": 12024535
 }
