@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#5b8cff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>OmniAI 随身版</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">OmniAI <span>随身版</span></div>
+  <div class="status" id="status">正在初始化…</div>
+</header>
+
+<main class="chat" id="chat"></main>
+
+<footer class="composer">
+  <textarea id="input" rows="1" placeholder="说点什么…（本地离线对话）"></textarea>
+  <button id="send" aria-label="发送">发送</button>
+</footer>
+
+<div class="hint" id="hint">提示：首次使用需联网下载一次本地模型（约 400MB），之后完全离线。iPhone 的 Safari 暂不支持本地模型，会自动切换为「离线简版」。</div>
+
+<script src="app.js"></script>
+</body>
+</html>
