@@ -1,14 +1,14 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "name": "OmniAI 专业版",
-  "changelog": "OmniAI 专业版 2.2.0：新增文本框右键「复制 / 粘贴」菜单；修复激活后侧边栏「未激活」状态未刷新的问题；整体稳定性与体验优化。需产品密钥激活。",
+  "changelog": "OmniAI 专业版 2.3.0：出图改为本机本地推理（SD-Turbo，免费离线）；彻底移除产品密钥门禁，开箱即用。",
   "download_page": "https://vojingx.github.io/omni-ai-pro.html#download",
   "download_portable": "https://vojingx.github.io/App/OmniAI-Pro-Portable.exe",
   "download_setup": "https://vojingx.github.io/App/OmniAI-Pro-Setup.exe",
   "mandatory": false,
-  "published_at": "2026-07-25",
-  "portable_sha256": "5333f4afe1e9b53441a803172f7dfadbc56736cc841684e1d48c7f7124174e29",
-  "portable_size": 30319437,
-  "setup_sha256": "844a43d9647d1f5654043dbe18fc33f155f781583ec98ac02a137006a86fd63c",
-  "setup_size": 12024236
+  "published_at": "2026-07-28",
+  "portable_sha256": "28c28244a56c9beacd0bd99cfe412df49eaeb24685db62236591e56cdadf1b99",
+  "portable_size": 36956295,
+  "setup_sha256": "0a676b37e5aef60318f6ba155185bdb6cb0fdaeccddd230a4f6f87d2ea7e2c4b",
+  "setup_size": 12024737
 }
