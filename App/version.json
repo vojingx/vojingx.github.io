@@ -1,14 +1,14 @@
 {
-  "version": "1.3.2",
+  "version": "1.4.0",
   "name": "OmniAI Studio",
-  "changelog": "OmniAI Studio 1.3.2 标准版（免费、无需产品密钥）：本地聊天 + AI 游戏 + 免费出图，安装后直接打开即用。",
+  "changelog": "OmniAI Studio 1.4.0：出图改为本机本地推理（SD-Turbo，免费离线）；彻底移除产品密钥门禁，开箱即用。",
   "download_page": "https://vojingx.github.io/omni-ai.html#download",
   "download_portable": "https://vojingx.github.io/App/OmniAI-Portable.exe",
   "download_setup": "https://vojingx.github.io/App/OmniAI-Setup.exe",
   "mandatory": false,
-  "published_at": "2026-07-25",
-  "portable_sha256": "1f8f20021a40fa31949db342686e2bdf9eb9eb4525b9be86af10063d2ed228f6",
-  "portable_size": 36650588,
-  "setup_sha256": "5039df3326e1e90267bdbc192b897be11a7b170a21be25aa78ffa46a439e6028",
-  "setup_size": 12022105
+  "published_at": "2026-07-28",
+  "portable_sha256": "56cc7c51922bb43ef4915f4f1f1f28dc9fa24985ea206f8a9d8877a5ae03f7b0",
+  "portable_size": 36956218,
+  "setup_sha256": "04a2a179be417c05924da296d50c624eaaa628b5db6acf5412ace1291e57bd04",
+  "setup_size": 12024168
 }
