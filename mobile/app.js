@@ -10,11 +10,16 @@
   var sendEl = document.getElementById("send");
   var statusEl = document.getElementById("status");
   var hintEl = document.getElementById("hint");
+  var dlBtn = document.getElementById("dlmodel");
 
   var MODEL_ID = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
   var engine = null;
   var mode = "loading"; // loading | local | offline
   var history = [{ role: "system", content: "你是一个本地运行的 AI 助手，叫 OmniAI。用简体中文、友好简洁地回答。" }];
+
+  // 本地模型是否已下载并缓存（用于离线提示）
+  var modelCached = false;
+  try { modelCached = localStorage.getItem("omniai_model_cached") === "1"; } catch (e) {}
 
   // ---------- 服务注册 ----------
   if ("serviceWorker" in navigator) {
@@ -73,8 +78,13 @@
       });
       await engine.reload(MODEL_ID, { temperature: 0.7, top_p: 0.9 });
       mode = "local";
+      try { localStorage.setItem("omniai_model_cached", "1"); } catch (e) {}
+      modelCached = true;
       setStatus("本地模型就绪 · 离线可用");
-      hintEl.style.display = "none";
+      if (hintEl) {
+        hintEl.innerHTML = "✅ 本地模型已下载并缓存，断网也能用真·AI。<br>iPhone 的 Safari 无 WebGPU，仍走离线简版。";
+      }
+      if (dlBtn) dlBtn.style.display = "none";
     } catch (e) {
       fallback("本地模型加载失败：" + (e && e.message ? e.message : e));
     }
@@ -106,8 +116,14 @@
 
   function fallback(reason) {
     mode = "offline";
-    setStatus("离线简版 · 无需联网");
-    addBubble("sys", "本地模型不可用，已切换为离线简版（内置应答，完全断网可用）。");
+    if (navigator.gpu && !navigator.onLine) {
+      // 支持 WebGPU 但当前离线、且模型尚未缓存：诚实告知需联网下载一次
+      setStatus("离线简版 · 本地模型未下载");
+      addBubble("sys", "当前离线，且本地模型尚未下载缓存。请联网打开一次本应用（会自动下载并缓存模型，约 400MB），之后即可断网使用真·本地大模型。现已切换为离线简版（内置应答）。");
+    } else {
+      setStatus("离线简版 · 无需联网");
+      addBubble("sys", "本地模型不可用，已切换为离线简版（内置应答，完全断网可用）。");
+    }
     console.warn(reason);
   }
 
@@ -125,6 +141,13 @@
   }
 
   // ---------- 事件 ----------
+  if (dlBtn) {
+    dlBtn.addEventListener("click", function () {
+      dlBtn.disabled = true;
+      dlBtn.textContent = "下载中…（约 400MB，请保持联网）";
+      initLocal();
+    });
+  }
   sendEl.addEventListener("click", send);
   inputEl.addEventListener("keydown", function (e) {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
