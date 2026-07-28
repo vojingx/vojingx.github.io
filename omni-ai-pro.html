@@ -27,7 +27,6 @@ body{background:#0e0e14;color:#e9e9f0;}
 .section{background:#16161f;border:1px solid #3a2c12;border-radius:12px;padding:36px;margin-top:30px;}
 .section h2{color:#ffd76b;margin-bottom:16px;}
 .section p,.section li{color:#cfcfe0;font-size:15px;line-height:1.9;}
-.key-box{background:#0e0e14;border:1px dashed #6b4f1d;border-radius:8px;padding:18px 22px;margin:14px 0;font-size:20px;letter-spacing:1px;color:#ffd76b;text-align:center;font-family:Consolas,monospace;}
 .note{font-size:13px;color:#9a9aa8;margin-top:10px;}
 .back{margin-top:30px;}
 </style>
@@ -44,7 +43,7 @@ body{background:#0e0e14;color:#e9e9f0;}
 <div class="hero">
 <span class="badge">PRO · Max · Ultra · 超级无敌极致版</span>
 <h1>OmniAI 专业版</h1>
-<p>三合一本地 AI 大模型工作台 · 聊天 / 记忆 / 资讯 / AI 视频 整合一体<br>AI 游戏常驻右侧 · 默认引擎 Qwen3-8B · 启动需产品密钥激活</p>
+<p>三合一本地 AI 大模型工作台 · 聊天 / 记忆 / 资讯 / AI 视频 整合一体<br>AI 游戏常驻右侧 · 默认引擎 Qwen3-8B · 完全离线、无需激活</p>
 <div>
 <a class="btn" href="/App/OmniAI-Pro-Setup.exe">下载安装版</a>
 <a class="btn alt" href="/App/OmniAI-Pro-Portable.exe">绿色版（免安装）</a>
@@ -54,7 +53,7 @@ body{background:#0e0e14;color:#e9e9f0;}
 <div class="card"><h3>三合一工作台</h3><p>聊天 / 记忆 / 资讯 / AI 视频 整合进统一界面，顶部标签页一键切换，不再来回跳页。</p></div>
 <div class="card"><h3>最强免费本地模型</h3><p>默认引擎升级为 Qwen3-8B（免费本地模型里最强的对话模型），完全离线、不花钱、不联网。</p></div>
 <div class="card"><h3>游戏置右常驻</h3><p>聊天界面右侧常驻 🎮 小游戏（井字棋），点「打开完整游戏」还能玩五子棋，边聊边玩。</p></div>
-<div class="card"><h3>对话出图</h3><p>在聊天里说“画一只猫”，自动调用免费通道出图，无需配置任何 API Key。</p></div>
+<div class="card"><h3>对话出图</h3><p>在聊天里说“画一只猫”，自动调用本机本地模型出图（纯免费、离线运行，无需 API Key）。</p></div>
 <div class="card"><h3>长期记忆</h3><p>「记忆」页可添加长期偏好/身份，每次聊天自动参考，跨会话记住你。</p></div>
 <div class="card"><h3>资讯 + AI 视频</h3><p>RSS 免费聚合科技 / AI 资讯，可「AI 解读」；文字转 GIF 动画，软件内预览保存。</p></div>
 </div>
@@ -62,25 +61,20 @@ body{background:#0e0e14;color:#e9e9f0;}
 <h2>下载</h2>
 <p>安装版：<a href="/App/OmniAI-Pro-Setup.exe" style="color:#ffd76b;">OmniAI-Pro-Setup.exe</a>（推荐，自动建快捷方式）</p>
 <p>绿色版：<a href="/App/OmniAI-Pro-Portable.exe" style="color:#ffd76b;">OmniAI-Pro-Portable.exe</a>（单文件，解压即用）</p>
-<p class="note">专业版使用独立下载文件 OmniAI-Pro-Portable.exe / OmniAI-Pro-Setup.exe，与标准版互不共用（当前版本 2.2.0）。</p>
-</div>
-<div class="section">
-<h2>产品密钥激活</h2>
-<p>首次打开软件会弹出产品密钥框，输入您获得的密钥激活后即可进入（<b>仅激活一次</b>，之后自动进入，无需再次输入）。关闭未激活则退出程序。</p>
-<div class="key-box locked">🔒 产品密钥不在此页面公开</div>
-<p class="note">专业版为授权软件，密钥通过私信 / 购买渠道单独发送，请妥善保存。如重装系统需重新激活，仍使用同一串密钥。</p>
+<p class="note">专业版使用独立下载文件 OmniAI-Pro-Portable.exe / OmniAI-Pro-Setup.exe，与标准版互不共用（当前版本 2.3.0）。</p>
 </div>
 <div class="section">
 <h2>使用说明</h2>
 <p>1. 下载并安装 OmniAI 专业版（PRO Max Ultra）。</p>
-<p>2. <b>首次打开需输入产品密钥激活</b>（密钥见上方，仅激活一次，之后自动进入主界面）。</p>
+<p>2. 首次打开直接进入主界面（无需任何激活 / 产品密钥）。</p>
 <p>3. 进入统一工作台：顶部 💬聊天 / 🧠记忆 / 📰资讯 / 🎬视频 一键切换；右侧常驻 🎮 小游戏（井字棋），点「打开完整游戏」可玩五子棋。</p>
 <p>4. 首次使用点「下载本地模型」选 Qwen3-8B（专业版默认引擎）下载后离线聊天；想出图就说“画xxx”。</p>
 <p>5. 在「记忆」页添加长期偏好，聊天时自动参考；「资讯」页可浏览或搜索并「AI 解读」；「AI 视频」页生成 GIF。</p>
 </div>
 <div class="section">
 <h2>更新日志</h2>
-<p>🟢 <b>v2.2.0（最新）</b>：新增文本框右键「复制 / 粘贴」菜单；修复激活后侧边栏「未激活」状态未刷新的问题；整体稳定性与体验优化。</p>
+<p>🟢 <b>v2.3.0（最新）</b>：出图从在线改为本机本地推理（SD-Turbo，纯免费、离线），聊天出图与 AI 视频均不再依赖网络。</p>
+<p>🟢 <b>v2.2.0</b>：新增文本框右键「复制 / 粘贴」菜单；修复激活后侧边栏「未激活」状态未刷新的问题；整体稳定性与体验优化。</p>
 <p class="note">专业版新功能优先在专业版发布，后续视情况再决定否下沉到标准版。</p>
 </div>
 <div class="section">
