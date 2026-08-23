@@ -3,274 +3,323 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vojing工作室</title>
+<title>Vojing 工作室 · 简洁实用的 PC 工具</title>
+<meta name="description" content="Vojing 工作室 · 专注开发简洁、实用、顺手的 PC 软件：即时通讯、小游戏、视频播放器、浏览器与本地 AI。">
+<link rel="icon" href="favicon.ico">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
-body{background:#fff5f5;color:#222;}
-/* 顶部导航栏 */
-.top-nav{
-width:100%;
-height:65px;
-background:#ff6b6b;
-display:flex;
-align-items:center;
-padding:0 40px;
-box-shadow:0 2px 6px #ffb3b3;
-justify-content:space-between;
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f7f8fa;
+  --ink:#16181d;
+  --ink-2:#5b6170;
+  --ink-3:#8a8f9c;
+  --line:#ececf0;
+  --card:#ffffff;
+  --accent:#ff5a5f;
+  --accent-d:#e8454a;
+  --accent-soft:rgba(255,90,95,.10);
+  --radius:18px;
+  --shadow-sm:0 1px 2px rgba(16,18,29,.04),0 4px 16px rgba(16,18,29,.06);
+  --shadow-md:0 8px 30px rgba(16,18,29,.10);
+  --maxw:1140px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
 }
-.logo{
-font-size:26px;
-font-weight:bold;
-color:#660000;
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
 }
-.nav-group{
-display:flex;
-gap:36px;
-align-items:center;
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+
+/* ---------- Nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s ease, box-shadow .3s ease;
 }
-.nav-link{
-text-decoration:none;
-color:#440000;
-font-size:17px;
-padding:8px 12px;
-border-radius:6px;
-cursor:pointer;
+.nav.scrolled{border-bottom-color:var(--line);box-shadow:0 1px 20px rgba(16,18,29,.04);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{font-size:19px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:9px;}
+.logo .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,#ff6a6a,#ff4d8d);box-shadow:0 2px 8px rgba(255,90,95,.5);}
+.logo span{color:var(--ink-3);font-weight:600;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links a{
+  font-size:15px;color:var(--ink-2);padding:8px 14px;border-radius:10px;
+  transition:color .2s ease, background .2s ease;
 }
-.nav-link:hover{
-background:#ff9999;
+.nav-links a:hover{color:var(--ink);background:var(--bg-soft);}
+.nav-cta{
+  margin-left:8px;font-size:14px;font-weight:600;color:#fff;
+  background:var(--accent);padding:9px 18px;border-radius:999px;
+  transition:transform .15s ease, background .2s ease, box-shadow .2s ease;
+  box-shadow:0 4px 14px rgba(255,90,95,.35);
 }
-.main{
-width:92%;
-max-width:1250px;
-margin:45px auto;
+.nav-cta:hover{background:var(--accent-d);transform:translateY(-1px);}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;}
+.nav-toggle span{width:22px;height:2px;background:var(--ink);border-radius:2px;transition:.3s;}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;padding:120px 0 96px;}
+.hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(58% 50% at 18% 8%, rgba(255,106,106,.12), transparent 62%),
+    radial-gradient(50% 42% at 88% 18%, rgba(99,102,241,.10), transparent 60%),
+    radial-gradient(46% 40% at 60% 95%, rgba(16,185,129,.07), transparent 60%);
 }
-/* 首页欢迎区 */
-.welcome-box{
-background:#ffe8e8;
-border-radius:12px;
-padding:80px 20px;
-text-align:center;
+.hero .wrap{position:relative;z-index:1;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:600;letter-spacing:.04em;
+  color:var(--accent-d);background:var(--accent-soft);
+  padding:6px 14px;border-radius:999px;margin-bottom:22px;
 }
-.welcome-box h2{
-font-size:32px;
-color:#991a1a;
-margin-bottom:30px;
+.eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(255,90,95,.5);animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,90,95,.5);}70%{box-shadow:0 0 0 9px rgba(255,90,95,0);}100%{box-shadow:0 0 0 0 rgba(255,90,95,0);}}
+.hero h1{
+  font-size:clamp(2.4rem,6vw,4.1rem);font-weight:760;letter-spacing:-.03em;
+  line-height:1.08;max-width:14ch;
+  background:linear-gradient(180deg,#16181d 55%,#3a3f4b);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.start-btn{
-padding:14px 40px;
-background:#ff5252;
-color:#fff;
-border:none;
-border-radius:8px;
-font-size:18px;
-cursor:pointer;
+.hero .sub{margin-top:22px;font-size:clamp(1rem,2vw,1.18rem);color:var(--ink-2);max-width:54ch;}
+.hero-actions{margin-top:34px;display:flex;flex-wrap:wrap;gap:14px;}
+.btn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;padding:13px 26px;border-radius:999px;transition:transform .15s ease, background .2s ease, box-shadow .2s ease, border-color .2s ease;}
+.btn-primary{color:#fff;background:var(--accent);box-shadow:0 8px 22px rgba(255,90,95,.32);}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-2px);box-shadow:0 12px 28px rgba(255,90,95,.4);}
+.btn-ghost{color:var(--ink);background:#fff;border:1px solid var(--line);}
+.btn-ghost:hover{border-color:#d8d9e0;background:var(--bg-soft);transform:translateY(-2px);}
+.hero-stats{margin-top:54px;display:flex;flex-wrap:wrap;gap:40px;}
+.stat .n{font-size:1.7rem;font-weight:740;letter-spacing:-.02em;}
+.stat .l{font-size:13.5px;color:var(--ink-3);margin-top:2px;}
+
+/* ---------- Sections ---------- */
+.section{padding:84px 0;}
+.section.soft{background:var(--bg-soft);}
+.section-head{text-align:center;max-width:620px;margin:0 auto 48px;}
+.section-head h2{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:740;letter-spacing:-.02em;}
+.section-head p{margin-top:12px;color:var(--ink-2);font-size:1.02rem;}
+
+/* ---------- Store cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;}
+.card{
+  position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);
+  transition:transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s ease, border-color .25s ease;
+  display:flex;flex-direction:column;
 }
-.start-btn:hover{
-background:#e63939;
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-md);border-color:#e3e4ea;}
+.card-icon{
+  width:50px;height:50px;border-radius:14px;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent-d);margin-bottom:18px;
 }
-/* VOJING Store 区 */
-.down-area{
-background:#ffe8e8;
-border-radius:12px;
-padding:35px;
-display:none;
+.card-icon svg{width:26px;height:26px;}
+.card h3{font-size:1.18rem;font-weight:700;display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+.tag{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;letter-spacing:.02em;}
+.tag-zip{background:#fff4e0;color:#b9740a;}
+.tag-exe{background:#e3f7ea;color:#128a4f;}
+.tag-ai{background:#eaddff;color:#7a3cd6;}
+.card p{margin-top:10px;color:var(--ink-2);font-size:.94rem;flex:1;}
+.card-foot{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.card-btn{font-size:14px;font-weight:600;color:var(--accent-d);display:inline-flex;align-items:center;gap:6px;transition:gap .2s ease;}
+.card-btn:hover{gap:11px;}
+.card-hist{font-size:12.5px;color:var(--ink-3);}
+.card-hist:hover{color:var(--accent-d);}
+
+/* ---------- About ---------- */
+.about-card{
+  max-width:760px;margin:0 auto;text-align:center;
+  background:var(--card);border:1px solid var(--line);border-radius:24px;
+  padding:54px 40px;box-shadow:var(--shadow-sm);
+  background-image:radial-gradient(120% 120% at 50% 0%,rgba(255,90,95,.06),transparent 55%);
 }
-.down-area h2{
-color:#991a1a;
-margin-bottom:20px;
+.about-card h2{font-size:clamp(1.6rem,3vw,2.1rem);font-weight:740;letter-spacing:-.02em;}
+.about-card p{margin-top:16px;color:var(--ink-2);font-size:1.05rem;}
+
+/* ---------- Footer ---------- */
+.footer{border-top:1px solid var(--line);padding:34px 0;background:#fff;}
+.footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.footer .logo{font-size:16px;}
+.footer .copy{color:var(--ink-3);font-size:13.5px;}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1);}
+.reveal.in{opacity:1;transform:none;}
+
+/* ---------- Responsive ---------- */
+@media (max-width:860px){
+  .nav-toggle{display:flex;}
+  .nav-links{
+    position:absolute;top:64px;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:#fff;border-bottom:1px solid var(--line);
+    padding:12px 16px 18px;box-shadow:var(--shadow-md);
+    transform:translateY(-12px);opacity:0;pointer-events:none;transition:.25s ease;
+  }
+  .nav-links.open{transform:none;opacity:1;pointer-events:auto;}
+  .nav-links a{padding:12px 14px;}
+  .nav-cta{margin:6px 14px 0;}
+  .hero{padding:84px 0 70px;}
+  .hero-stats{gap:28px;}
 }
-.down-list{
-display:flex;
-flex-wrap:wrap;
-gap:24px;
-}
-.down-card{
-width:280px;
-background:#fff;
-border:1px solid #ffaaaa;
-border-radius:10px;
-padding:26px;
-}
-.down-card h3{
-color:#801515;
-margin-bottom:12px;
-}
-.down-card p{
-color:#662222;
-margin-bottom:22px;
-font-size:14px;
-line-height:1.6;
-}
-.folder-tag{
-display:inline-block;
-font-size:12px;
-background:#ffc857;
-color:#333;
-padding:2px 6px;
-border-radius:4px;
-margin-left:8px;
-}
-.file-tag{
-display:inline-block;
-font-size:12px;
-background:#72d082;
-color:#222;
-padding:2px 6px;
-border-radius:4px;
-margin-left:8px;
-}
-.down-btn{
-display:inline-block;
-background:#ff5252;
-color:#fff;
-text-decoration:none;
-padding:11px 28px;
-border-radius:7px;
-font-weight:500;
-}
-.down-btn:hover{
-background:#e63939;
-}
-/* 历史版本入口标签 */
-.hist-box{
-margin-top:16px;
-padding-top:14px;
-border-top:1px dashed #ffaaaa;
-}
-.hist-tag{
-display:inline-block;
-font-size:13px;
-background:#fff0e6;
-color:#a04a1a;
-border:1px solid #ffb38a;
-text-decoration:none;
-padding:6px 15px;
-border-radius:20px;
-font-weight:500;
-}
-.hist-tag:hover{
-background:#ffe0cc;
-color:#e63939;
-}
-/* 关于页面 */
-.about-box{
-background:#ffe8e8;
-border-radius:12px;
-padding:40px;
-text-align:center;
-display:none;
-}
-.about-box h2{
-color:#991a1a;
-margin-bottom:15px;
-}
-/* 手机适配 */
-@media (max-width: 768px){
-.top-nav{
-height:auto;
-flex-direction:column;
-padding:18px;
-gap:16px;
-}
-.nav-group{
-gap:16px;
-flex-wrap:wrap;
-justify-content:center;
-}
-.down-card{
-width:100%;
-}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  html{scroll-behavior:auto;}
+  .eyebrow .pulse{animation:none;}
 }
 </style>
 </head>
 <body>
-<div class="top-nav">
-<div class="logo">Vojing工作室</div>
-<div class="nav-group">
-<a class="nav-link" onclick="showWelcome()">首页</a>
-<a class="nav-link" onclick="location.href='/VOJING/'">VOJING搜索</a>
-<a class="nav-link" onclick="toggleDownload()">VOJING Store</a>
-<a class="nav-link" onclick="location.href='/CodeLab/'">网页实验室</a>
-<a class="nav-link" id="cloudLink" href="/Cloud/" >网盘</a>
-<a class="nav-link" onclick="toggleAbout()">关于</a>
-</div>
-</div>
 
-<div class="main">
-<!-- 首页欢迎 -->
-<div class="welcome-box" id="welcomeBox">
-<h2>欢迎来到 Vojing 工作室</h2>
-<button class="start-btn" onclick="goDownload()">点击开始</button>
-</div>
+<!-- ===== Nav ===== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#home" class="logo"><span class="dot"></span>Vojing<span>工作室</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">首页</a>
+      <a href="/VOJING/">VOJING 搜索</a>
+      <a href="#store">VOJING Store</a>
+      <a href="/CodeLab/">网页Python</a>
+      <a href="/Cloud/">网盘</a>
+      <a href="#about">关于</a>
+      <a class="nav-cta" href="#store">获取软件</a>
+    </nav>
+  </div>
+</header>
 
-<!-- VOJING Store -->
-<div class="down-area" id="downloadBox">
-<h2>VOJING Store</h2>
-<div class="down-list">
-<div class="down-card">
-<h3>Vojing Chat <span class="folder-tag">ZIP包</span></h3>
-<p>自研即时聊天软件，支持局域网互相通讯，完整程序文件夹。</p>
-<a class="down-btn" href="/App/VOJING%20Chat.zip" >进入下载</a>
-</div>
-<div class="down-card">
-<h3>Vojing 小游戏 <span class="file-tag">单EXE文件</span></h3>
-<p>轻量休闲小游戏，直接运行Play.exe即可游玩，无需额外安装。</p>
-<a class="down-btn" href="/App/Play.exe" >立即下载</a>
-</div>
-<div class="down-card">
-<h3>Vojing 视频播放器 <span class="file-tag">单EXE文件</span></h3>
-<p>自研视频播放器，支持多种视频格式，安装即用，流畅播放。</p>
-<a class="down-btn" href="/App/Setup.exe" >立即下载</a>
-</div>
-<div class="down-card">
-<h3>Vojing X 浏览器 <span class="file-tag">单EXE文件</span></h3>
-<p>自研轻量浏览器，基于 Chromium 内核，多标签页、智能搜索、下载管理。</p>
-<a class="down-btn" href="/App/Vojing%20X%20浏览器安装包.exe" >立即下载</a>
-</div>
-<div class="down-card">
-<h3>OmniAI Studio <span class="file-tag">AI软件</span></h3>
-<p>本地聊天 AI + AI 游戏 + 记忆 / 资讯 / AI 视频。支持本地模型离线运行；对话中说"画xx"即可出图（免费，无需 API）；内置自动更新，已下载用户会收到新版本提醒。</p>
-<a class="down-btn" href="/omni-ai.html">下载</a>
-<div class="hist-box">
-<a class="hist-tag" href="/omni-ai.html#history">🕘 历史版本 ›</a>
-</div>
-</div>
-</div>
+<main>
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="wrap">
+      <div class="eyebrow reveal"><span class="pulse"></span>VOJING STUDIO</div>
+      <h1 class="reveal">把想法，<br>变成好用的软件</h1>
+      <p class="sub reveal">Vojing 工作室 · 专注开发简洁、实用、顺手的 PC 工具。即时通讯、休闲小游戏、视频播放器、轻量浏览器与本地 AI，一应俱全。</p>
+      <div class="hero-actions reveal">
+        <a class="btn btn-primary" href="#store">浏览 VOJING Store →</a>
+        <a class="btn btn-ghost" href="/VOJING/">体验 VOJING 搜索 ›</a>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="stat"><div class="n">5+</div><div class="l">自研 PC 工具</div></div>
+        <div class="stat"><div class="n">100%</div><div class="l">免费 · 即下即用</div></div>
+        <div class="stat"><div class="n">本地</div><div class="l">AI 离线可运行</div></div>
+      </div>
+    </div>
+  </section>
 
-<!-- 关于页面 -->
-<div class="about-box" id="aboutBox">
-<h2>关于我们</h2>
-<p>Vojing 工作室致力于开发简洁实用的 PC 软件，为大家带来更好的数字体验。</p>
-</div>
-</div>
+  <!-- ===== Store ===== -->
+  <section class="section soft" id="store">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>VOJING Store</h2>
+        <p>精选自研工具，点击即可下载使用。无需繁琐安装，开箱即玩。</p>
+      </div>
+      <div class="cards">
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.3 9 9 0 0 1-4-1L3 20l1.2-4A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+          </div>
+          <h3>Vojing Chat <span class="tag tag-zip">ZIP 包</span></h3>
+          <p>自研即时聊天软件，支持局域网互相通讯，完整程序文件夹。</p>
+          <div class="card-foot">
+            <a class="card-btn" href="/App/VOJING%20Chat.zip">进入下载 →</a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="4"/><line x1="7" y1="11" x2="7" y2="11"/><line x1="11" y1="11" x2="11" y2="11"/><path d="M15 11h2M8 15h8"/></svg>
+          </div>
+          <h3>Vojing 小游戏 <span class="tag tag-exe">单 EXE 文件</span></h3>
+          <p>轻量休闲小游戏，直接运行 Play.exe 即可游玩，无需额外安装。</p>
+          <div class="card-foot">
+            <a class="card-btn" href="/App/Play.exe">立即下载 →</a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4-2.5-4-2.5Z"/></svg>
+          </div>
+          <h3>Vojing 视频播放器 <span class="tag tag-exe">单 EXE 文件</span></h3>
+          <p>自研视频播放器，支持多种视频格式，安装即用，流畅播放。</p>
+          <div class="card-foot">
+            <a class="card-btn" href="/App/Setup.exe">立即下载 →</a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11l4.5-2.5Z"/></svg>
+          </div>
+          <h3>Vojing X 浏览器 <span class="tag tag-exe">单 EXE 文件</span></h3>
+          <p>自研轻量浏览器，基于 Chromium 内核，多标签页、智能搜索、下载管理。</p>
+          <div class="card-foot">
+            <a class="card-btn" href="/App/Vojing%20X%20浏览器安装包.exe">立即下载 →</a>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8L12 3Z"/><path d="M18 14l.8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8L18 14Z"/></svg>
+          </div>
+          <h3>OmniAI Studio <span class="tag tag-ai">AI 软件</span></h3>
+          <p>本地聊天 AI + AI 游戏 + 记忆 / 资讯 / AI 视频。支持本地模型离线运行；对话中说"画 xx"即可出图（免费，无需 API）；内置自动更新。</p>
+          <div class="card-foot">
+            <a class="card-btn" href="/omni-ai.html">下载 →</a>
+            <a class="card-hist" href="/omni-ai.html#history">🕘 历史版本 ›</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="about-card reveal">
+        <h2>关于我们</h2>
+        <p>Vojing 工作室致力于开发简洁实用的 PC 软件，为大家带来更好的数字体验。所有工具免费提供，持续更新。</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>Vojing<span>工作室</span></div>
+    <div class="copy">© 2026 Vojing 工作室 · 简洁实用的 PC 工具</div>
+  </div>
+</footer>
 
 <script>
-// 隐藏全部板块
-function hideAll(){
-    document.getElementById("welcomeBox").style.display = "none";
-    document.getElementById("downloadBox").style.display = "none";
-    document.getElementById("aboutBox").style.display = "none";
-}
-// 首页
-function showWelcome(){
-    hideAll();
-    document.getElementById("welcomeBox").style.display = "block";
-}
-// 点击直接跳资源下载
-function goDownload(){
-    hideAll();
-    document.getElementById("downloadBox").style.display = "block";
-}
-// 下载页面
-function toggleDownload(){
-    hideAll();
-    document.getElementById("downloadBox").style.display = "block";
-}
-// 关于页面
-function toggleAbout(){
-    hideAll();
-    document.getElementById("aboutBox").style.display = "block";
-}
+// Nav scroll shadow
+const nav=document.getElementById('nav');
+const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>8);
+onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+
+// Mobile menu
+const t=document.getElementById('navToggle'),links=document.getElementById('navLinks');
+t.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+
+// Reveal on scroll
+const io=new IntersectionObserver((es)=>{
+  es.forEach((e,i)=>{ if(e.isIntersecting){ e.target.style.transitionDelay=(i*60)+'ms'; e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
