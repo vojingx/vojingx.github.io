@@ -5,33 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OmniAI Studio - 本地聊天 AI 与 AI 游戏</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei",微软雅黑,sans-serif;}
-body{background:#fff5f5;color:#222;}
-.top-nav{width:100%;height:65px;background:#ff6b6b;display:flex;align-items:center;padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;}
-.logo{font-size:26px;font-weight:bold;color:#660000;}
-.nav-group{display:flex;gap:36px;align-items:center;}
-.nav-link{text-decoration:none;color:#440000;font-size:17px;padding:8px 12px;border-radius:6px;}
-.nav-link:hover{background:#ff9999;}
+:root{
+  --bg:#f7f8fa; --card:#ffffff; --ink:#16181d; --ink-2:#5b6170; --ink-3:#8a8f9c;
+  --line:#ececf0; --accent:#ff5a5f; --accent-d:#e8454a; --accent-soft:rgba(255,90,95,.10);
+  --radius:18px; --shadow-sm:0 1px 2px rgba(16,18,29,.04),0 4px 16px rgba(16,18,29,.06);
+  --shadow-md:0 8px 30px rgba(16,18,29,.10);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:var(--font);}
+body{background:
+    radial-gradient(60% 50% at 12% 0%, rgba(255,90,95,.07), transparent 60%),
+    radial-gradient(55% 50% at 92% 8%, rgba(99,102,241,.07), transparent 60%),
+    var(--bg);
+  color:var(--ink);-webkit-font-smoothing:antialiased;}
+.top-nav{width:100%;height:65px;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 40px;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.logo{font-size:22px;font-weight:800;letter-spacing:-.01em;}
+.logo span{color:var(--accent);}
+.nav-group{display:flex;gap:10px;align-items:center;}
+.nav-link{text-decoration:none;color:var(--ink-2);font-size:15px;padding:8px 14px;border-radius:10px;transition:.2s;}
+.nav-link:hover{background:var(--bg);color:var(--ink);}
 .main{width:92%;max-width:1000px;margin:45px auto;}
-.hero{background:#ffe8e8;border-radius:12px;padding:60px 30px;text-align:center;}
-.hero h1{font-size:34px;color:#991a1a;margin-bottom:16px;}
-.hero p{color:#662222;font-size:16px;line-height:1.8;margin-bottom:28px;}
-.btn{display:inline-block;background:#ff5252;color:#fff;text-decoration:none;padding:14px 36px;border-radius:8px;font-size:18px;margin:6px;}
-.btn.alt{background:#ff8a65;}
-.btn:hover{background:#e63939;}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:60px 36px;text-align:center;box-shadow:var(--shadow-sm);}
+.hero h1{font-size:34px;font-weight:800;letter-spacing:-.02em;margin-bottom:16px;}
+.hero p{color:var(--ink-2);font-size:16px;line-height:1.8;margin-bottom:28px;max-width:60ch;margin-left:auto;margin-right:auto;}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:14px 36px;border-radius:999px;font-size:17px;font-weight:600;margin:6px;box-shadow:0 8px 22px rgba(255,90,95,.32);transition:.2s;}
+.btn:hover{background:var(--accent-d);transform:translateY(-2px);}
+.btn.alt{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none;}
+.btn.alt:hover{border-color:#d8d9e0;background:var(--bg);}
 .features{display:flex;flex-wrap:wrap;gap:20px;margin-top:30px;}
-.card{background:#fff;border:1px solid #ffaaaa;border-radius:10px;padding:24px;width:300px;}
-.card h3{color:#801515;margin-bottom:10px;}
-.card p{color:#662222;font-size:14px;line-height:1.6;}
-.section{background:#ffe8e8;border-radius:12px;padding:36px;margin-top:30px;}
-.section h2{color:#991a1a;margin-bottom:16px;}
-.section p,.section li{color:#662222;font-size:15px;line-height:1.8;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;width:300px;box-shadow:var(--shadow-sm);transition:.25s;}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+.card h3{color:var(--ink);margin-bottom:10px;font-size:17px;}
+.card p{color:var(--ink-2);font-size:14px;line-height:1.6;}
+.section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:36px;margin-top:30px;box-shadow:var(--shadow-sm);}
+.section h2{color:var(--ink);margin-bottom:16px;font-size:22px;letter-spacing:-.01em;}
+.section p,.section li{color:var(--ink-2);font-size:15px;line-height:1.8;}
+.section a{color:var(--accent-d);font-weight:600;}
 .back{margin-top:30px;}
+.back .nav-link{display:inline-block;background:var(--accent-soft);color:var(--accent-d);}
+@media(max-width:640px){.top-nav{padding:0 16px;}.main{width:94%;}}
 </style>
 </head>
 <body>
 <div class="top-nav">
-<div class="logo">OmniAI Studio</div>
+<div class="logo">OmniAI <span>Studio</span></div>
 <div class="nav-group">
 <a class="nav-link" href="/">返回官网</a>
 <a class="nav-link" href="#download">下载</a>
@@ -57,7 +74,7 @@ body{background:#fff5f5;color:#222;}
 <div class="section" id="download">
 <h2>下载</h2>
 <p>绿色版：<a href="/App/OmniAI-1.4.0-Portable.exe">OmniAI-1.4.0-Portable.exe</a>（单文件，解压即用）</p>
-<p style="margin-top:10px;font-size:13px;color:#884;">首次打开需在软件内下载本地聊天模型（约 1GB）与出图模型 SD-Turbo（约 1-2GB），之后完全离线使用，纯免费。</p>
+<p style="margin-top:10px;font-size:13px;color:var(--ink-3);">首次打开需在软件内下载本地聊天模型（约 1GB）与出图模型 SD-Turbo（约 1-2GB），之后完全离线使用，纯免费。</p>
 </div>
 <div class="section" id="history">
 <h2>历史版本</h2>
@@ -70,12 +87,12 @@ body{background:#fff5f5;color:#222;}
 <p style="margin-top:6px;">🕘 <b>v1.1.0 绿色版</b>：<a href="/App/OmniAI-1.1.0-Portable.exe">OmniAI-1.1.0-Portable.exe</a> — 在 1.0.1 基础上保留「检查更新」按钮。</p>
 <p style="margin-top:6px;">🕘 <b>v1.0.1 绿色版</b>：<a href="/App/OmniAI-1.0.1-Portable.exe">OmniAI-1.0.1-Portable.exe</a> — 旧功能（聊天 / AI 游戏 / 出图）+ 检查更新按钮。</p>
 <p style="margin-top:6px;">🕘 <b>v1.0.0 绿色版</b>：<a href="/App/OmniAI-1.0.0-Portable.exe">OmniAI-1.0.0-Portable.exe</a> — 纯净旧版，仅基础功能，无更新提示。</p>
-<p style="margin-top:10px;font-size:13px;color:#884;">说明：1.1.0 / 1.2.0 / 1.3.0 / 1.3.1 / 1.3.2 为按当前源码重建的存档版本（功能等同最新版，仅版本号不同），方便需要旧版本号的用户下载使用。</p>
+<p style="margin-top:10px;font-size:13px;color:var(--ink-3);">说明：1.1.0 / 1.2.0 / 1.3.0 / 1.3.1 / 1.3.2 为按当前源码重建的存档版本（功能等同最新版，仅版本号不同），方便需要旧版本号的用户下载使用。</p>
 </div>
 <div class="section">
 <h2>自动更新</h2>
 <p>OmniAI Studio 内置更新检查：每次启动时自动连接官网，发现新版本会在左下角提示「🔔 发现新版本」。点击即可前往下载最新安装版 / 绿色版，已下载过的用户也会收到提醒。</p>
-<p style="margin-top:8px;font-size:13px;color:#884;">你也可以随时在左侧「检查更新」按钮手动检查。</p>
+<p style="margin-top:8px;font-size:13px;color:var(--ink-3);">你也可以随时在左侧「检查更新」按钮手动检查。</p>
 </div>
 <div class="section">
 <h2>使用说明</h2>
