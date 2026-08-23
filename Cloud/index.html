@@ -1,634 +1,1170 @@
 <!DOCTYPE html>
+
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Vojing 网盘</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
-body{background:#fff5f5;color:#222;min-height:100vh;}
-/* Nav */
+:root{
+  --bg:#ffffff; --bg-soft:#f7f8fa; --ink:#16181d; --ink-2:#5b6170; --ink-3:#8a8f9c;
+  --line:#ececf0; --card:#fff; --accent:#ff5a5f; --accent-d:#e8454a; --accent-soft:rgba(255,90,95,.10);
+  --green:#10b981; --green-soft:#e3f7ea; --amber:#f59e0b; --amber-soft:#fff4e0;
+  --radius:18px; --shadow-sm:0 1px 2px rgba(16,18,29,.04),0 4px 16px rgba(16,18,29,.06); --shadow-md:0 8px 30px rgba(16,18,29,.10);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:var(--font);}
+body{background:var(--bg-soft);color:var(--ink);min-height:100vh;}
 .top-nav{
-width:100%;height:65px;background:#ff6b6b;display:flex;align-items:center;
-padding:0 40px;box-shadow:0 2px 6px #ffb3b3;justify-content:space-between;
+  width:100%;height:64px;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);display:flex;align-items:center;
+  padding:0 24px;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;
 }
-.logo{font-size:26px;font-weight:bold;color:#660000;}
-.nav-group{display:flex;gap:36px;align-items:center;}
-.nav-link{text-decoration:none;color:#440000;font-size:17px;padding:8px 12px;border-radius:6px;cursor:pointer;}
-.nav-link:hover{background:#ff9999;}
-.nav-link.active{background:#ff9999;color:#660000;font-weight:bold;}
-.nav-user{color:#660000;font-size:14px;padding:6px 14px;background:#fff;border-radius:6px;}
-.nav-logout{color:#cc3333;background:none;border:none;cursor:pointer;font-size:13px;padding:4px 10px;}
+.logo{font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--ink);display:flex;align-items:center;gap:9px;}
+.logo::before{content:"";width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,#ff6a6a,#ff4d8d);box-shadow:0 2px 8px rgba(255,90,95,.5);}
+.nav-group{display:flex;gap:4px;align-items:center;}
+.nav-link{text-decoration:none;color:var(--ink-2);font-size:15px;padding:8px 14px;border-radius:10px;cursor:pointer;transition:.2s;}
+.nav-link:hover{color:var(--ink);background:var(--bg-soft);}
+.nav-link.active{background:var(--accent-soft);color:var(--accent-d);font-weight:600;}
+.nav-user{color:var(--ink-2);font-size:14px;padding:6px 14px;background:var(--bg-soft);border-radius:999px;display:inline-flex;align-items:center;gap:8px;}
+.nav-logout{color:var(--accent-d);background:none;border:none;cursor:pointer;font-size:13px;padding:4px 8px;}
 .nav-logout:hover{text-decoration:underline;}
-.main{width:92%;max-width:1250px;margin:45px auto;}
-/* Login/Register Page */
-.auth-page{display:flex;justify-content:center;align-items:center;min-height:70vh;}
-.auth-box{background:#ffe8e8;border-radius:16px;padding:50px 40px;text-align:center;max-width:420px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}
-.auth-box h2{font-size:28px;color:#991a1a;margin-bottom:8px;}
-.auth-box .sub{color:#662222;font-size:14px;margin-bottom:30px;}
-.auth-box input{width:100%;padding:14px 18px;border:2px solid #ffaaaa;border-radius:10px;font-size:16px;background:#fff;color:#222;outline:none;margin-bottom:14px;text-align:center;}
-.auth-box input:focus{border-color:#ff5252;}
+.main{width:92%;max-width:1140px;margin:32px auto;}
+.auth-page{display:flex;justify-content:center;align-items:center;min-height:72vh;}
+.auth-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:48px 40px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-sm);}
+.auth-box h2{font-size:26px;color:var(--ink);margin-bottom:8px;font-weight:740;letter-spacing:-.02em;}
+.auth-box .sub{color:var(--ink-2);font-size:14px;margin-bottom:28px;}
+.auth-box input{width:100%;padding:14px 18px;border:1px solid var(--line);border-radius:12px;font-size:16px;background:#fff;color:var(--ink);outline:none;margin-bottom:14px;text-align:center;transition:.2s;}
+.auth-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
 .auth-box .btn{width:100%;padding:14px;font-size:16px;}
-.auth-box .switch{color:#ff5252;cursor:pointer;font-size:14px;margin-top:16px;display:block;}
+.auth-box .switch{color:var(--accent-d);cursor:pointer;font-size:14px;margin-top:16px;display:block;font-weight:500;}
 .auth-box .switch:hover{text-decoration:underline;}
-.auth-box .err{color:#cc3333;font-size:13px;margin-top:8px;min-height:20px;}
-/* Drive Page (hidden until login) */
+.auth-box .err{color:var(--accent-d);font-size:13px;margin-top:8px;min-height:20px;}
 .drive-page{display:none;}
-.cloud-header{background:#ffe8e8;border-radius:12px;padding:35px;text-align:center;margin-bottom:30px;}
-.cloud-header h2{font-size:30px;color:#991a1a;margin-bottom:10px;}
-.cloud-header p{color:#662222;font-size:14px;margin-bottom:20px;}
+.cloud-header{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:40px;text-align:center;margin-bottom:24px;box-shadow:var(--shadow-sm);background-image:radial-gradient(120% 120% at 50% 0%,rgba(255,90,95,.06),transparent 55%);}
+.cloud-header h2{font-size:28px;color:var(--ink);margin-bottom:8px;font-weight:740;}
+.cloud-header p{color:var(--ink-2);font-size:14px;margin-bottom:18px;}
 .search-bar{display:flex;justify-content:center;align-items:center;gap:10px;margin:0 auto;max-width:650px;flex-wrap:wrap;}
-.search-bar input{flex:1;min-width:200px;padding:12px 18px;border:2px solid #ffaaaa;border-radius:8px;font-size:15px;background:#fff;color:#222;outline:none;}
-.search-bar input:focus{border-color:#ff5252;}
-/* File upload inline */
-.upload-area{border:2px dashed #ffaaaa;border-radius:10px;padding:20px;margin-bottom:20px;text-align:center;background:#fff;transition:border-color 0.3s;cursor:pointer;}
-.upload-area:hover,.upload-area.dragover{border-color:#ff5252;background:#fff0f0;}
+.search-bar input{flex:1;min-width:200px;padding:12px 18px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:#fff;color:var(--ink);outline:none;transition:.2s;}
+.search-bar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.upload-area{border:2px dashed #d8d9e0;border-radius:14px;padding:28px;margin-bottom:20px;text-align:center;background:#fff;transition:.2s;cursor:pointer;}
+.upload-area:hover,.upload-area.dragover{border-color:var(--accent);background:var(--accent-soft);}
 .upload-area .upload-icon{font-size:36px;margin-bottom:8px;}
-.upload-area p{color:#662222;font-size:14px;}
-.upload-area .upload-hint{color:#999;font-size:12px;}
-/* Toolbar */
+.upload-area p{color:var(--ink-2);font-size:14px;}
+.upload-area .upload-hint{color:var(--ink-3);font-size:12px;}
 .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
-.stats{color:#662222;font-size:14px;}
-.stats span{font-weight:bold;color:#991a1a;}
-.btn{padding:10px 22px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500;transition:0.2s;}
-.btn-primary{background:#ff5252;color:#fff;}
-.btn-primary:hover{background:#e63939;}
-.btn-secondary{background:#fff;color:#ff5252;border:1px solid #ff5252;}
-.btn-secondary:hover{background:#ffe8e8;}
-.btn-danger{background:#fff;color:#cc3333;border:1px solid #cc3333;}
-.btn-danger:hover{background:#cc3333;color:#fff;}
-.btn-small{padding:6px 14px;font-size:12px;}
-/* File area */
-.file-area{background:#ffe8e8;border-radius:12px;padding:35px;margin-bottom:20px;}
-.file-area h3{color:#991a1a;margin-bottom:20px;font-size:22px;}
-.file-list{display:flex;flex-wrap:wrap;gap:24px;}
-.file-card{width:280px;background:#fff;border:1px solid #ffaaaa;border-radius:10px;padding:26px;position:relative;transition:transform 0.2s,box-shadow 0.2s;}
-.file-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,107,107,0.2);}
-.file-card .file-icon{font-size:40px;margin-bottom:12px;}
-.file-card h4{color:#801515;margin-bottom:6px;word-break:break-all;font-size:16px;}
-.file-card .file-meta{color:#662222;font-size:13px;margin-bottom:14px;line-height:1.6;}
-.file-tag{display:inline-block;font-size:11px;background:#72d082;color:#222;padding:2px 8px;border-radius:4px;margin-left:6px;}
-.folder-tag{display:inline-block;font-size:11px;background:#ffc857;color:#333;padding:2px 8px;border-radius:4px;margin-left:6px;}
-.premium-tag{display:inline-block;font-size:11px;background:#e94560;color:#fff;padding:2px 8px;border-radius:4px;margin-left:6px;}
+.stats{color:var(--ink-2);font-size:14px;}
+.stats span{font-weight:700;color:var(--ink);}
+.btn{padding:10px 22px;border:none;border-radius:10px;font-size:14px;cursor:pointer;font-weight:600;transition:.2s;}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(255,90,95,.3);}
+.btn-primary:hover{background:var(--accent-d);}
+.btn-secondary{background:#fff;color:var(--accent-d);border:1px solid var(--line);}
+.btn-secondary:hover{background:var(--bg-soft);border-color:#d8d9e0;}
+.btn-danger{background:#fff;color:var(--accent-d);border:1px solid #f0c4c6;}
+.btn-danger:hover{background:#fff0f0;}
+.btn-small{padding:8px 14px;font-size:13px;}
+.file-area{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;margin-bottom:20px;box-shadow:var(--shadow-sm);}
+.file-area h3{color:var(--ink);margin-bottom:18px;font-size:20px;font-weight:740;}
+.file-list{display:flex;flex-wrap:wrap;gap:18px;}
+.file-card{width:260px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;position:relative;transition:transform .2s,box-shadow .2s;}
+.file-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+.file-card .file-icon{font-size:38px;margin-bottom:12px;}
+.file-card h4{color:var(--ink);margin-bottom:6px;word-break:break-all;font-size:15px;font-weight:600;}
+.file-card .file-meta{color:var(--ink-2);font-size:13px;margin-bottom:14px;line-height:1.6;}
+.file-tag{display:inline-block;font-size:11px;background:var(--green-soft);color:#128a4f;padding:2px 8px;border-radius:999px;margin-left:6px;font-weight:600;}
+.folder-tag{display:inline-block;font-size:11px;background:var(--amber-soft);color:#b9740a;padding:2px 8px;border-radius:999px;margin-left:6px;font-weight:600;}
+.premium-tag{display:inline-block;font-size:11px;background:var(--accent);color:#fff;padding:2px 8px;border-radius:999px;margin-left:6px;font-weight:600;}
 .file-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.down-btn{display:inline-block;background:#ff5252;color:#fff;text-decoration:none;padding:9px 16px;border-radius:7px;font-weight:500;font-size:13px;cursor:pointer;border:none;}
-.down-btn:hover{background:#e63939;}
-.share-btn{display:inline-block;background:#fff;color:#ff5252;border:1px solid #ff5252;text-decoration:none;padding:9px 16px;border-radius:7px;font-weight:500;font-size:13px;cursor:pointer;}
-.share-btn:hover{background:#ffe8e8;}
-.del-btn{display:inline-block;background:none;color:#cc3333;border:1px solid #cc3333;padding:9px 16px;border-radius:7px;font-size:13px;cursor:pointer;}
-.del-btn:hover{background:#cc3333;color:#fff;}
-/* Empty / Loading */
-.empty-state{text-align:center;padding:60px 20px;color:#662222;}
+.down-btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:9px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;border:none;transition:.2s;}
+.down-btn:hover{background:var(--accent-d);}
+.share-btn{display:inline-block;background:#fff;color:var(--accent-d);border:1px solid var(--line);text-decoration:none;padding:9px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s;}
+.share-btn:hover{background:var(--bg-soft);}
+.del-btn{display:inline-block;background:none;color:var(--accent-d);border:1px solid #f0c4c6;padding:9px 16px;border-radius:10px;font-size:13px;cursor:pointer;transition:.2s;}
+.del-btn:hover{background:#fff0f0;}
+.empty-state{text-align:center;padding:60px 20px;color:var(--ink-2);}
 .empty-state .empty-icon{font-size:60px;margin-bottom:16px;}
-.loading{text-align:center;padding:40px;color:#662222;}
-.spinner{display:inline-block;width:30px;height:30px;border:3px solid #ffaaaa;border-top-color:#ff5252;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:10px;}
+.loading{text-align:center;padding:40px;color:var(--ink-2);}
+.spinner{display:inline-block;width:30px;height:30px;border:3px solid #e3e4ea;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-/* Toast */
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#72d082;color:#222;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;box-shadow:0 8px 24px rgba(16,18,29,.15);}
 .toast.show{opacity:1;}
-.toast.error{background:#ff6b6b;color:#fff;}
-/* Responsive */
-@media (max-width:768px){
-.top-nav{height:auto;flex-direction:column;padding:18px;gap:16px;}
-.nav-group{gap:16px;flex-wrap:wrap;justify-content:center;}
-.file-card{width:100%;}
-.auth-box{padding:30px 20px;}
-}
-.path-bar{padding:8px 12px;margin-bottom:12px;background:#fff;border-radius:8px;font-size:14px;color:#555;display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
+.toast.error{background:var(--accent);color:#fff;}
+.path-bar{padding:10px 14px;margin-bottom:12px;background:#fff;border:1px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;align-items:center;gap:2px;}
 .crumb{color:#5b9dff;cursor:pointer;}
 .crumb:hover{text-decoration:underline;}
-.crumb.up{color:#888;font-weight:600;}
-.crumb-sep{color:#bbb;}
+.crumb.up{color:var(--ink-3);font-weight:600;}
+.crumb-sep{color:#cfd2da;}
 .upload-btns{display:flex;gap:10px;justify-content:center;margin:8px 0;}
 .folder-card{cursor:pointer;border:1px solid #ffe0b2;background:#fffaf2;}
-.folder-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);}
-.agree-row{margin:14px 0 4px;font-size:13px;color:#666;text-align:center;}
+.folder-card:hover{box-shadow:0 4px 14px rgba(16,18,29,.12);}
+.agree-row{margin:14px 0 4px;font-size:13px;color:var(--ink-2);text-align:center;}
 .agree-row label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
 .agree-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;}
-.agree-row a{color:#1e3c72;text-decoration:underline;font-weight:600;}
+.agree-row a{color:var(--accent-d);text-decoration:underline;font-weight:600;}
+@media (max-width:768px){
+  .top-nav{height:auto;flex-direction:column;padding:14px;gap:12px;}
+  .nav-group{gap:8px;flex-wrap:wrap;justify-content:center;}
+  .file-card{width:100%;}
+  .auth-box{padding:30px 20px;}
+}
 </style>
+
 </head>
+
 <body>
+
 <div class="top-nav">
+
 <div class="logo">Vojing工作室</div>
+
 <div class="nav-group">
+
 <a class="nav-link" href="/">首页</a>
+
 <a class="nav-link" href="/VOJING/">VOJING搜索</a>
+
 <a class="nav-link" href="/" onclick="event.preventDefault()">VOJING Store</a>
-<a class="nav-link" href="/CodeLab/">网页实验室</a>
+
+<a class="nav-link" href="/CodeLab/">网页Python</a>
+
 <a class="nav-link active" href="/Cloud/">网盘</a>
+
 <a class="nav-link" href="/" onclick="event.preventDefault()">关于</a>
+
 <span class="nav-user" id="navUser" style="display:none"></span>
+
 </div>
+
 </div>
+
+
 
 <div id="toast" class="toast"></div>
 
+
+
 <!-- ====== 登录/注册页面 ====== -->
+
 <div class="auth-page" id="authPage">
+
 <div class="auth-box">
+
 <h2 id="authTitle">🔐 登录网盘</h2>
+
 <p class="sub" id="authSub">登录后即可使用全部功能</p>
+
 <input type="text" id="authUsername" placeholder="用户名" maxlength="20" autocomplete="username">
+
 <input type="password" id="authPassword" placeholder="密码" maxlength="30" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()">
+
 <input type="password" id="authPassword2" placeholder="确认密码" maxlength="30" autocomplete="new-password" onkeydown="if(event.key==='Enter')doAuth()" style="display:none">
+
 <button class="btn btn-primary" onclick="doAuth()" id="authBtn">登 录</button>
+
 <div class="agree-row">
+
   <label><input type="checkbox" id="agreePrivacy"> 我已阅读并同意 <a href="javascript:void(0)" onclick="openPrivacy()">《隐私协议》</a></label>
+
 </div>
+
 <p class="err" id="authErr"></p>
+
 <a class="switch" id="authSwitch" onclick="toggleAuthMode()">没有账户？立即注册 →</a>
+
 </div>
+
 </div>
+
+
 
 <!-- ====== 网盘页面 ====== -->
+
 <div class="drive-page" id="drivePage">
+
 <div class="main">
+
 <div class="cloud-header">
+
 <h2>📁 Vojing 网盘</h2>
+
 <p id="welcomeMsg">欢迎回来</p>
+
 <div class="search-bar">
+
 <input type="text" id="searchInput" placeholder="输入文件名搜索..." oninput="filterFiles()">
+
 </div>
+
 </div>
+
+
 
 <!-- 上传区 -->
+
 <div class="upload-area" id="uploadArea">
+
 <div class="upload-icon">📤</div>
+
 <p>拖拽文件到此处，或选择下方方式上传</p>
+
 <div class="upload-btns">
+
   <button class="btn btn-primary btn-small" type="button" onclick="document.getElementById('fileInput').click()">📄 上传文件</button>
+
   <button class="btn btn-secondary btn-small" type="button" onclick="document.getElementById('folderInput').click()">📁 上传文件夹</button>
+
 </div>
+
 <p class="upload-hint">单个文件最大 100MB（GitHub API 上限）· 上传文件夹会保留层级结构</p>
+
 </div>
+
 <input type="file" id="fileInput" multiple style="display:none" onchange="handleUpload(this.files)">
+
 <input type="file" id="folderInput" webkitdirectory multiple style="display:none" onchange="handleFolderUpload(this.files)">
 
+
+
 <!-- 工具栏 -->
+
 <div class="toolbar">
+
 <div class="stats">共 <span id="fileCount">0</span> 个文件 · 总大小 <span id="totalSize">0 B</span></div>
+
 <div>
+
 <button class="btn btn-primary btn-small" onclick="downloadAllCurrent()">⬇ 下载全部</button>
+
 <button class="btn btn-secondary btn-small" onclick="sortFiles('name')">按名称</button>
+
 <button class="btn btn-secondary btn-small" onclick="sortFiles('size')">按大小</button>
+
 <button class="btn btn-secondary btn-small" onclick="loadAllFiles()">🔄 刷新</button>
+
 </div>
+
 </div>
+
+
 
 <!-- 文件列表 -->
+
 <div class="file-area">
+
 <h3>📂 我的文件</h3>
+
 <div class="path-bar" id="pathBar"></div>
+
 <div class="file-list" id="fileList"><div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div></div>
+
+</div>
+
+
+
 </div>
 
 </div>
-</div>
+
+
 
 <script>
+
 // ======== 配置 ========
+
 const OWNER='vojingx',REPO='vojingx.github.io',BRANCH='main';
+
 const CLOUD_PATH='Cloud',USERS_FILE='Cloud/_users.json';
+
 // ⚠️ 安全说明：纯前端网盘无法隐藏 token。这里不再把真实 token 写死在源码里
+
 // （避免部署到 GitHub Pages 后任何人右键查看源码就能拿到 token），
+
 // 改为首次打开时由你输入并存入浏览器 localStorage。
+
 // 强烈建议：使用「仅限 vojingx.github.io 仓库 Contents 读写」的 fine-grained token，
+
 // 不要用拥有所有仓库权限的普通 Personal Access Token。
-const TOKEN='ghp_k4Do2LDuF'+'4JDItxItWN0kbc'+'StVS36M30MdgN';
+
+let TOKEN = localStorage.getItem('vojing_cloud_token') || '';
+if(!TOKEN){
+  TOKEN = window.prompt('请输入具有 vojingx.github.io 仓库 Contents 读写权限的 GitHub Token\n（仅保存在本机浏览器 localStorage，不会上传任何服务器）：') || '';
+  if(TOKEN){ try{ localStorage.setItem('vojing_cloud_token', TOKEN); }catch(e){} }
+}
+
 // 用户数据 API
+
 const API_BASE=`https://api.github.com/repos/${OWNER}/${REPO}`;
+
+
 
 let currentUser=null,allFiles=[],currentSort='name',authMode='login',currentPath=null;
 
+
+
 // 统一请求头（带 token）
+
 function authHeaders(){const h={Accept:'application/vnd.github+json'};if(TOKEN)h.Authorization='Bearer '+TOKEN;return h;}
+
 // 当前登录用户的文件目录（用户隔离）
+
 function getUserDir(){return CLOUD_PATH+'/'+(currentUser?currentUser.username:'_public');}
+
 // 对路径逐段做 URL 编码（保留 / 分隔），避免中文/空格用户名或文件名导致 API 404
+
 function encPath(p){return p.split('/').map(encodeURIComponent).join('/');}
 
+
+
 // ======== 初始化 ========
+
 function init(){
+
     checkSession();
+
 }
+
 function checkSession(){
+
     const s=localStorage.getItem('cloud_user');
+
     if(s){
+
         try{
+
             currentUser=JSON.parse(s);
+
             if(currentUser.username){
+
                 showDrive();
+
                 return;
+
             }
+
         }catch(e){}
+
     }
+
     showAuth();
+
 }
+
 // ======== 认证 UI ========
+
 function showAuth(){
+
     document.getElementById('authPage').style.display='flex';
+
     document.getElementById('drivePage').style.display='none';
+
     document.getElementById('navUser').style.display='none';
+
 }
+
 function showDrive(){
+
     document.getElementById('authPage').style.display='none';
+
     document.getElementById('drivePage').style.display='block';
+
     document.getElementById('navUser').style.display='inline';
+
     document.getElementById('navUser').innerHTML=`👤 ${currentUser.username} <button class="nav-logout" onclick="doLogout()">退出</button>`;
+
     document.getElementById('welcomeMsg').textContent=`欢迎，${currentUser.username}`;
+
     loadAllFiles();
+
     // 支持文件夹深链：?folder=<路径> 打开后自动进入该文件夹
+
     try{
+
         const fp=new URLSearchParams(location.search).get('folder');
+
         if(fp){openFolder(decodeURIComponent(fp));}
+
     }catch(e){}
+
 }
+
 function toggleAuthMode(){
+
     if(authMode==='login'){
+
         authMode='register';
+
         document.getElementById('authTitle').textContent='📝 注册网盘';
+
         document.getElementById('authSub').textContent='创建账户，立即开始使用';
+
         document.getElementById('authBtn').textContent='注 册';
+
         document.getElementById('authSwitch').textContent='已有账户？立即登录 →';
+
         document.getElementById('authPassword2').style.display='block';
+
     }else{
+
         authMode='login';
+
         document.getElementById('authTitle').textContent='🔐 登录网盘';
+
         document.getElementById('authSub').textContent='登录后即可使用全部功能';
+
         document.getElementById('authBtn').textContent='登 录';
+
         document.getElementById('authSwitch').textContent='没有账户？立即注册 →';
+
         document.getElementById('authPassword2').style.display='none';
+
     }
+
     document.getElementById('authErr').textContent='';
+
 }
+
 // ======== 用户数据操作 ========
+
 async function sha256(str){
+
     const b=new TextEncoder().encode(str);
+
     const h=await crypto.subtle.digest('SHA-256',b);
+
     return Array.from(new Uint8Array(h)).map(x=>x.toString(16).padStart(2,'0')).join('');
+
 }
+
 async function fetchUsers(){
+
     const url=`${API_BASE}/contents/${USERS_FILE}?ref=${BRANCH}`;
+
     const r=await fetch(url,{headers:authHeaders()});
+
     if(r.status===404)return{};
+
     if(!r.ok)throw new Error('读取用户数据失败');
+
     const d=await r.json();
+
     // 修复中文乱码：atob 得到 Latin1 字符串，需用 escape/decodeURIComponent 还原 UTF-8
+
     return JSON.parse(decodeURIComponent(escape(atob(d.content))));
+
 }
+
 async function saveUsers(users,message){
+
     const url=`${API_BASE}/contents/${USERS_FILE}`;
+
     let sha=null;
+
     try{
+
         const r=await fetch(url,{headers:authHeaders()});
+
         if(r.ok){const d=await r.json();sha=d.sha;}
+
     }catch(e){}
+
     const body={message,content:btoa(unescape(encodeURIComponent(JSON.stringify(users,null,2)))),branch:BRANCH};
+
     if(sha)body.sha=sha;
+
     const r=await fetch(url,{method:'PUT',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+
     if(!r.ok){const e=await r.json();throw new Error(e.message||'Save failed');}
+
 }
+
 // ======== 登录/注册 ========
+
 async function openPrivacy(){
+
     const url='https://vojingx.github.io/'+encodeURIComponent('隐私协议.txt');
+
     try{
+
         const r=await fetch(url);
+
         if(!r.ok)throw new Error('未找到隐私协议文件');
+
         const blob=await r.blob();
+
         const a=document.createElement('a');
+
         a.href=URL.createObjectURL(blob);
+
         a.download='隐私协议.txt';
+
         document.body.appendChild(a);a.click();a.remove();
+
         showToast('《隐私协议》已开始下载');
+
     }catch(e){
+
         window.open(url,'_blank'); // 下载失败则新标签打开查看
+
         showToast('已打开《隐私协议》',true);
+
     }
+
 }
+
 async function doAuth(){
+
     const u=document.getElementById('authUsername').value.trim();
+
     const p=document.getElementById('authPassword').value;
+
     const errEl=document.getElementById('authErr');
+
     errEl.textContent='';
+
     if(!document.getElementById('agreePrivacy').checked){errEl.textContent='请先阅读并勾选同意《隐私协议》';return;}
+
     if(!/^[a-zA-Z0-9_\-]{2,20}$/.test(u)){errEl.textContent='用户名仅限字母/数字/下划线/短横，2-20位';return;}
+
     if(p.length<3){errEl.textContent='密码至少3个字符';return;}
+
     if(authMode==='register'){
+
         const p2=document.getElementById('authPassword2').value;
+
         if(p2!==p){errEl.textContent='两次输入的密码不一致';return;}
+
     }
+
     const btn=document.getElementById('authBtn');
+
     btn.disabled=true;btn.textContent='处理中...';
+
     try{
+
         if(authMode==='login'){
+
             await handleLogin(u,p);
+
         }else{
+
             await handleRegister(u,p);
+
         }
+
     }catch(e){
+
         errEl.textContent=e.message||'操作失败，请重试';
+
         btn.disabled=false;
+
         btn.textContent=authMode==='login'?'登 录':'注 册';
+
     }
+
 }
+
 async function handleLogin(u,p){
+
     const users=await fetchUsers();
+
     const hash=await sha256(p);
+
     if(!users[u])throw new Error('用户名不存在，请先注册');
+
     if(users[u].pass!==hash)throw new Error('密码错误');
+
     currentUser={username:u};
+
     localStorage.setItem('cloud_user',JSON.stringify(currentUser));
+
     document.getElementById('authPassword').value='';
+
     document.getElementById('authBtn').disabled=false;
+
     document.getElementById('authBtn').textContent='登 录';
+
     showDrive();
+
 }
+
 async function handleRegister(u,p){
+
     const users=await fetchUsers();
+
     if(users[u])throw new Error('用户名已存在，请直接登录');
+
     const hash=await sha256(p);
+
     users[u]={pass:hash,created:new Date().toISOString()};
+
     await saveUsers(users,'Register: '+u);
+
     currentUser={username:u};
+
     localStorage.setItem('cloud_user',JSON.stringify(currentUser));
+
     document.getElementById('authPassword2').value='';
+
     document.getElementById('authBtn').disabled=false;
+
     document.getElementById('authBtn').textContent='注 册';
+
     showDrive();
+
 }
+
 function doLogout(){
+
     localStorage.removeItem('cloud_user');
+
     currentUser=null;
+
     allFiles=[];
+
     showAuth();
+
 }
+
 // ======== 文件操作 ========
+
 function getCurrentDir(){return currentPath||getUserDir();}
+
 function currentRelDir(){
+
     const base=getUserDir();
+
     if(!currentPath||currentPath===base)return '';
+
     return currentPath.slice(base.length+1);
+
 }
+
 function joinRel(dir,file){return dir?dir+'/'+file:file;}
+
 async function loadAllFiles(){
+
     showLoading();
+
     try{
+
         allFiles=await fetchFiles(getCurrentDir());
+
         sortAndRender();
+
         renderBreadcrumb();
+
     }catch(e){
+
         document.getElementById('fileList').innerHTML='<div class="empty-state" style="width:100%"><div class="empty-icon">📭</div><p>加载失败，请刷新页面</p></div>';
+
     }
+
 }
+
 function openFolder(path){currentPath=path;loadAllFiles();}
+
 function openRoot(){currentPath=null;loadAllFiles();}
+
 function goUp(){
+
     const base=getUserDir();
+
     if(!currentPath||currentPath===base){currentPath=null;return;}
+
     const parts=currentPath.split('/');parts.pop();
+
     const parent=parts.join('/');
+
     currentPath=(parent===base)?null:parent;
+
     loadAllFiles();
+
 }
+
 function renderBreadcrumb(){
+
     const bar=document.getElementById('pathBar');
+
     if(!bar)return;
+
     let html=`<span class="crumb" onclick="openRoot()">📁 我的文件</span>`;
+
     if(currentPath&&currentPath!==getUserDir()){
+
         const segs=currentRelDir().split('/');
+
         let cum=getUserDir();
+
         segs.forEach(s=>{
+
             cum=cum+'/'+s;
+
             html+=` <span class="crumb-sep">/</span> <span class="crumb" onclick="openFolder('${escJs(cum)}')">${esc(s)}</span>`;
+
         });
+
         html=`<span class="crumb up" onclick="goUp()">⬆ 返回上级</span> &nbsp; `+html;
+
     }
+
     bar.innerHTML=html;
+
 }
+
 async function fetchFiles(dir){
+
     const url=`${API_BASE}/contents/${encPath(dir)}?ref=${BRANCH}`;
+
     const r=await fetch(url,{headers:authHeaders()});
+
     if(r.status===404)return[];
+
     if(r.status===403)throw new Error('GitHub API 限流，请稍后重试');
+
     if(!r.ok)return[];
+
     const d=await r.json();
+
     const arr=Array.isArray(d)?d:[d];
+
     return arr.filter(f=>!f.name.startsWith('_')).map(f=>({
+
         name:f.name,size:f.size||0,path:f.path,sha:f.sha,type:f.type,
+
         raw_url: f.type==='file' ? `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${encPath(dir)}/${encodeURIComponent(f.name)}` : '',
+
     }));
+
 }
+
 async function handleUpload(files){
+
     if(!files||files.length===0)return;
+
     const rel=currentRelDir();
+
     for(const f of files){
+
         if(f.size>100*1024*1024){showToast(`${f.name} 超过100MB限制`,true);continue;}
+
         await uploadOne(f, joinRel(rel,f.name));
+
     }
+
     document.getElementById('fileInput').value='';
+
     await loadAllFiles();
+
 }
+
 async function handleFolderUpload(fileList){
+
     if(!fileList||fileList.length===0)return;
+
     for(const f of fileList){
+
         if(!f.webkitRelativePath)continue;
+
         if(f.size>100*1024*1024){showToast(`${f.webkitRelativePath} 超过100MB限制`,true);continue;}
+
         await uploadOne(f, f.webkitRelativePath);
+
     }
+
     document.getElementById('folderInput').value='';
+
     await loadAllFiles();
+
 }
+
 function readAsBase64(file){
+
     return new Promise((resolve,reject)=>{
+
         const reader=new FileReader();
+
         reader.onload=()=>resolve(reader.result.split(',')[1]);
+
         reader.onerror=reject;
+
         reader.readAsDataURL(file);
+
     });
+
 }
+
 async function uploadOne(file, relPath){
+
     showToast(`正在上传: ${relPath}...`);
+
     const content=await readAsBase64(file);
+
     // 逐段清理非法字符（防路径穿越 / 子目录注入）
+
     const segs=String(relPath).split('/').map(s=>s.replace(/[\/\\]/g,'_').slice(0,120));
+
     let targetRel=segs.join('/');
+
     let path=`${getUserDir()}/${targetRel}`;
+
     let sha=null;
+
     try{
+
         const r=await fetch(`${API_BASE}/contents/${encPath(path)}`,{headers:authHeaders()});
+
         if(r.ok){const d=await r.json();sha=d.sha;}
+
     }catch(e){}
+
     if(sha){
+
         const ok=confirm(`文件 "${targetRel}" 已存在，是否覆盖？\n\n取消则自动另存为副本。`);
+
         if(!ok){
+
             segs[segs.length-1]=renameToCopy(segs[segs.length-1]);
+
             targetRel=segs.join('/');
+
             path=`${getUserDir()}/${targetRel}`;
+
             sha=null;
+
         }
+
     }
+
     const body={message:`Upload: ${targetRel}`,content,branch:BRANCH};
+
     if(sha)body.sha=sha;
+
     const r=await fetch(`${API_BASE}/contents/${encPath(path)}`,{method:'PUT',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
+
     if(r.ok)showToast(`上传成功: ${targetRel}`);
+
     else{const e=await r.json();showToast(`上传失败: ${e.message||'未知错误'}`,true);}
+
 }
+
 // 生成不冲突的副本名：name(1).ext / name(2).ext ...
+
 function renameToCopy(name){
+
     const dot=name.lastIndexOf('.');
+
     const base=dot>0?name.slice(0,dot):name;
+
     const ext=dot>0?name.slice(dot):'';
+
     let i=1,n;
+
     do{n=`${base}(${i})${ext}`;i++;}while(allFiles.some(f=>f.name===n));
+
     return n;
+
 }
+
 async function deleteFile(path,sha,name){
+
     if(!confirm(`确定删除 "${name}"？`))return;
+
     const url=`${API_BASE}/contents/${encPath(path)}`;
+
     const r=await fetch(url,{method:'DELETE',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify({message:`Delete: ${name}`,sha,branch:BRANCH})});
+
     if(r.ok){showToast('已删除');await loadAllFiles();}
+
     else{const e=await r.json();showToast('删除失败: '+(e.message||''),true);}
+
 }
+
 // 递归删除文件夹（GitHub Contents API 不支持一次删目录，需逐文件删）
+
 async function deleteFolderRecursive(path){
+
     const url=`${API_BASE}/contents/${encPath(path)}?ref=${BRANCH}`;
+
     const r=await fetch(url,{headers:authHeaders()});
+
     if(!r.ok)return;
+
     const d=await r.json();
+
     const arr=Array.isArray(d)?d:[d];
+
     for(const item of arr){
+
         if(item.type==='file'){
+
             const dr=await fetch(`${API_BASE}/contents/${encPath(item.path)}`,{method:'DELETE',headers:{...authHeaders(),'Content-Type':'application/json'},body:JSON.stringify({message:`Delete: ${item.path}`,sha:item.sha,branch:BRANCH})});
+
             if(!dr.ok)showToast('删除失败: '+item.name,true);
+
         }else if(item.type==='dir'){
+
             await deleteFolderRecursive(item.path);
+
         }
+
     }
+
 }
+
 async function deleteFolder(path,name){
+
     if(!confirm(`确定删除整个文件夹 "${name}" 及其所有内容？此操作不可恢复。`))return;
+
     await deleteFolderRecursive(path);
+
     showToast('文件夹已删除');
+
     await loadAllFiles();
+
 }
+
 // 真正下载：fetch 文件为 blob 后用 a.download 触发下载，避免 txt/html 在浏览器直接打开
+
 async function downloadFile(f){
+
     try{
+
         showToast('准备下载: '+f.name);
+
         const r=await fetch(f.raw_url,{mode:'cors'});
+
         if(!r.ok)throw new Error('HTTP '+r.status);
+
         const b=await r.blob();
+
         const a=document.createElement('a');
+
         a.href=URL.createObjectURL(b);
+
         a.download=f.name;
+
         document.body.appendChild(a);a.click();a.remove();
+
         setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+
         showToast('已开始下载: '+f.name);
+
     }catch(e){
+
         showToast('下载失败: '+e.message+'（可试试复制永久链接用下载工具）',true);
+
     }
+
 }
+
 // 一键下载当前文件夹内全部文件（不含子文件夹）
+
 async function downloadAllCurrent(){
+
     const files=allFiles.filter(f=>f.type!=='dir');
+
     if(!files.length){showToast('当前文件夹没有可下载的文件',true);return;}
+
     showToast('开始下载 '+files.length+' 个文件，请允许浏览器多次下载');
+
     for(const f of files){
+
         await downloadFile({name:f.name,raw_url:f.raw_url});
+
         await new Promise(r=>setTimeout(r,500));
+
     }
+
     showToast('全部下载任务已发起');
+
 }
+
 async function downloadAllFolder(path){
+
     showToast('正在加载文件夹文件...');
+
     const files=await fetchFiles(path);
+
     const toDownload=files.filter(f=>f.type==='file'&&f.raw_url);
+
     if(!toDownload.length){showToast('该文件夹内没有可下载的文件',true);return;}
+
     showToast('开始下载 '+toDownload.length+' 个文件，请允许浏览器多次下载');
+
     for(const f of toDownload){
+
         await downloadFile({name:f.name,raw_url:f.raw_url});
+
         await new Promise(r=>setTimeout(r,500));
+
     }
+
     showToast('全部下载任务已发起');
+
 }
+
 // ======== 渲染 ========
+
 function showLoading(){document.getElementById('fileList').innerHTML='<div class="loading" style="width:100%"><div class="spinner"></div><p>加载中...</p></div>';}
+
 function sortAndRender(){
+
     // 文件夹始终排在前面
+
     allFiles.sort((a,b)=>{
+
         if((a.type==='dir')!==(b.type==='dir'))return a.type==='dir'?-1:1;
+
         if(currentSort==='name')return a.name.localeCompare(b.name);
+
         return (b.size||0)-(a.size||0);
+
     });
+
     renderFiles(allFiles);
+
     updateStats();
+
 }
+
 function renderFiles(files){
+
     const c=document.getElementById('fileList');
+
     if(files.length===0){c.innerHTML='<div class="empty-state" style="width:100%"><div class="empty-icon">📭</div><p>暂无文件</p><p style="font-size:13px;color:#999;">点击上方上传区或拖拽文件上传</p></div>';return;}
+
     c.innerHTML=files.map(f=>createCard(f)).join('');
+
 }
+
 function createCard(f){
+
     if(f.type==='dir'){
+
         const flink=folderLink(f.path);
+
         return `
+
         <div class="file-card folder-card" onclick="openFolder('${escJs(f.path)}')">
+
             <div class="file-icon">📁</div>
+
             <h4>${esc(f.name)}</h4>
+
             <div class="file-meta">文件夹</div>
+
             <div class="file-actions">
+
                 <button class="down-btn" onclick="event.stopPropagation();downloadAllFolder('${escJs(f.path)}')">⬇ 下载全部</button>
+
                 <button class="share-btn" onclick="event.stopPropagation();copyLink('${escJs(flink)}')">🔗 复制链接</button>
+
                 <button class="del-btn" onclick="event.stopPropagation();deleteFolder('${escJs(f.path)}','${escJs(f.name)}')">🗑</button>
+
             </div>
+
         </div>`;
+
     }
+
     const icon=getIcon(f.name);
+
     const size=formatSize(f.size);
+
     const tag=getTypeTag(f.name);
+
     const shareUrl=`https://vojingx.github.io/share.html?file=${encodeURIComponent(f.path)}`;
+
     return `
+
     <div class="file-card">
+
         <div class="file-icon">${icon}</div>
+
         <h4>${esc(f.name)}${tag}</h4>
+
         <div class="file-meta">大小: ${size}</div>
+
         <div class="file-actions">
+
             <a class="down-btn" href="javascript:void(0)" onclick="downloadFile({name:'${escJs(f.name)}',raw_url:'${escJs(f.raw_url)}'})">⬇ 下载</a>
+
             <button class="share-btn" onclick="copyLink('${escJs(encodeURI(shareUrl))}')">🔗 复制永久链接</button>
+
             <button class="del-btn" onclick="deleteFile('${escJs(f.path)}','${f.sha}','${escJs(f.name)}')">🗑</button>
+
         </div>
+
     </div>`;
+
 }
+
 function copyLink(url){
+
     if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('永久分享链接已复制！'));}
+
     else{const i=document.createElement('input');i.value=url;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);showToast('永久分享链接已复制！');}
+
 }
+
 // 文件夹深链：打开分享落地页（无需登录）
+
 function folderLink(path){return `https://vojingx.github.io/share.html?folder=${encodeURIComponent(path)}`;}
+
 function filterFiles(){
+
     const q=document.getElementById('searchInput').value.toLowerCase();
+
     renderFiles(q?allFiles.filter(f=>f.name.toLowerCase().includes(q)):allFiles);
+
 }
+
 function sortFiles(by){currentSort=by;sortAndRender();}
+
 function updateStats(){
+
     document.getElementById('fileCount').textContent=allFiles.length;
+
     document.getElementById('totalSize').textContent=formatSize(allFiles.reduce((s,f)=>s+(f.size||0),0));
+
 }
+
 // ======== 拖拽上传 ========
+
 const ua=document.getElementById('uploadArea');
+
 ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('dragover');});
+
 ua.addEventListener('dragleave',()=>ua.classList.remove('dragover'));
+
 ua.addEventListener('drop',e=>{e.preventDefault();ua.classList.remove('dragover');handleUpload(e.dataTransfer.files);});
+
 // ======== 工具 ========
+
 function getIcon(n){const m={pdf:'📕',doc:'📘',docx:'📘',xls:'📗',xlsx:'📗',ppt:'📙',pptx:'📙',zip:'📦',rar:'📦','7z':'📦',tar:'📦',gz:'📦',exe:'⚙',msi:'⚙',apk:'📱',jpg:'🖼',jpeg:'🖼',png:'🖼',gif:'🖼',svg:'🖼',mp3:'🎵',wav:'🎵',flac:'🎵',mp4:'🎬',avi:'🎬',mkv:'🎬',txt:'📄',md:'📝',json:'📋',csv:'📊',html:'🌐',css:'🎨',js:'⚡',py:'🐍',java:'☕',iso:'💿',dmg:'💿'};return m[n.split('.').pop().toLowerCase()]||'📄';}
+
 function getTypeTag(n){const e=n.split('.').pop().toLowerCase();if(['zip','rar','7z','tar','gz'].includes(e))return'<span class="folder-tag">压缩包</span>';if(['exe','msi','apk','dmg'].includes(e))return'<span class="file-tag">程序</span>';if(['mp3','wav','flac'].includes(e))return'<span class="file-tag">音频</span>';if(['mp4','avi','mkv'].includes(e))return'<span class="file-tag">视频</span>';return'';}
+
 function formatSize(b){if(!b||b===0)return'0 B';const u=['B','KB','MB','GB','TB'];const i=Math.floor(Math.log(b)/Math.log(1024));return(b/Math.pow(1024,i)).toFixed(1)+' '+u[i];}
+
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
 function escJs(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 function showToast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(err?' error':'');setTimeout(()=>t.className='toast',2500);}
 
+
+
 init();
+
 </script>
+
 </body>
+
 </html>
+
