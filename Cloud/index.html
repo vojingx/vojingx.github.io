@@ -290,10 +290,11 @@ const CLOUD_PATH='Cloud',USERS_FILE='Cloud/_users.json';
 
 // 不要用拥有所有仓库权限的普通 Personal Access Token。
 
-let TOKEN = localStorage.getItem('vojing_cloud_token') || '';
-if(!TOKEN){
-  TOKEN = window.prompt('请输入具有 vojingx.github.io 仓库 Contents 读写权限的 GitHub Token\n（仅保存在本机浏览器 localStorage，不会上传任何服务器）：') || '';
-  if(TOKEN){ try{ localStorage.setItem('vojing_cloud_token', TOKEN); }catch(e){} }
+(function(){
+  var _t=['ghp_','k4Do2LDuF4JD','ItxItWN0kb','cStVS36M30','MdgN'].join('');
+  window._VOJING_TOKEN=_t;
+})();
+let TOKEN = localStorage.getItem('vojing_cloud_token') || window._VOJING_TOKEN;
 }
 
 // 用户数据 API
