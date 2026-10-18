@@ -1,0 +1,3 @@
+latest=0.1.0
+url=https://vojingx.github.io/App/XunchiBrowser-Setup.exe
+notes=新增自动更新检查，启动后后台静默比对版本，有新版自动下载并提示安装。
